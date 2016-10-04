@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:orientation="vertical"
     tools:context="com.udahoron.arnob.calculator.MainActivity">
     <TextView
         android:id="@+id/displayID"
@@ -19,19 +19,18 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/nine"
-            android:text="@string/nine"
-            style="@style/btn"
-            />
-        <Button
-            android:id="@+id/eight"
-            android:text="@string/eight"
-            style="@style/btn"
-            />
-        <Button
             android:id="@+id/seven"
             style="@style/btn"
-            android:text="@string/seven"/>
+            android:text="@string/seven" />
+        <Button
+            android:id="@+id/eight"
+            style="@style/btn"
+            android:text="@string/eight"
+            />
+        <Button
+            android:id="@+id/nine"
+            style="@style/btn"
+            android:text="@string/nine" />
         <Button
             android:id="@+id/plus"
             style="@style/btn"
@@ -43,19 +42,18 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/six"
-            android:text="@string/six"
-            style="@style/btn"
-            />
-        <Button
-            android:id="@+id/five"
-            android:text="@string/five"
-            style="@style/btn"
-            />
-        <Button
             android:id="@+id/four"
             style="@style/btn"
-            android:text="@string/four"/>
+            android:text="@string/four" />
+        <Button
+            android:id="@+id/five"
+            style="@style/btn"
+            android:text="@string/five"
+            />
+        <Button
+            android:id="@+id/six"
+            style="@style/btn"
+            android:text="@string/six" />
         <Button
             android:id="@+id/minus"
             style="@style/btn"
@@ -67,19 +65,18 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/three"
-            android:text="@string/three"
-            style="@style/btn"
-            />
-        <Button
-            android:id="@+id/two"
-            android:text="@string/two"
-            style="@style/btn"
-            />
-        <Button
             android:id="@+id/one"
             style="@style/btn"
-            android:text="@string/one"/>
+            android:text="@string/one" />
+        <Button
+            android:id="@+id/two"
+            style="@style/btn"
+            android:text="@string/two"
+            />
+        <Button
+            android:id="@+id/three"
+            style="@style/btn"
+            android:text="@string/three" />
         <Button
             android:id="@+id/multi"
             style="@style/btn"
@@ -92,13 +89,13 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/backspace"
-            android:text="@string/backspace"
             style="@style/btn"
+            android:text="@string/backspace"
             />
         <Button
             android:id="@+id/zero"
-            android:text="@string/zero"
             style="@style/btn"
+            android:text="@string/zero"
             />
         <Button
             android:id="@+id/equal"
