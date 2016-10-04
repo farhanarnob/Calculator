@@ -9,10 +9,18 @@
 
     </style>
     <style name="displaySize">
-        <item name="android:layout_height">200dp</item>
+        <item name="android:layout_height">150dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">60sp</item>
         <item name="android:gravity">bottom|right</item>
+    </style>
+    <style name="btn">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:background">#757575</item>
+        <item name="android:textSize">40sp</item>
     </style>
 
 </resources>
