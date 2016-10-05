@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     }
 
-
+    // implementing lister of the button
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -79,36 +79,36 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
             case R.id.plus:
                 Toast.makeText(MainActivity.this, "plus", Toast.LENGTH_SHORT).show();
-                if (displayValue.length() != 0 && !isOperator() && !isSameOperator(R.id.plus)) {
+                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.plus)) {
                     screenShow(R.string.plus);
-                } else if (displayValue.length() != 0 && isOperator()) {
+                } else if (displayValue.length() != 0 && atLastHasOperator()) {
                     backspaceButtonWork();
                     screenShow(R.string.plus);
                 }
                 break;
             case R.id.minus:
                 Toast.makeText(MainActivity.this, "minus", Toast.LENGTH_SHORT).show();
-                if (displayValue.length() != 0 && !isOperator() && !isSameOperator(R.id.minus)) {
+                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.minus)) {
                     screenShow(R.string.minus);
-                } else if (displayValue.length() != 0 && isOperator()) {
+                } else if (displayValue.length() != 0 && atLastHasOperator()) {
                     backspaceButtonWork();
                     screenShow(R.string.minus);
                 }
                 break;
             case R.id.multi:
                 Toast.makeText(MainActivity.this, "multi", Toast.LENGTH_SHORT).show();
-                if (displayValue.length() != 0 && !isOperator() && !isSameOperator(R.id.multi)) {
+                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.multi)) {
                     screenShow(R.string.multi);
-                } else if (displayValue.length() != 0 && isOperator()) {
+                } else if (displayValue.length() != 0 && atLastHasOperator()) {
                     backspaceButtonWork();
                     screenShow(R.string.multi);
                 }
                 break;
             case R.id.divide:
                 Toast.makeText(MainActivity.this, "divide", Toast.LENGTH_SHORT).show();
-                if (displayValue.length() != 0 && !isOperator() && !isSameOperator(R.id.divide)) {
+                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.divide)) {
                     screenShow(R.string.divide);
-                } else if (displayValue.length() != 0 && isOperator()) {
+                } else if (displayValue.length() != 0 && atLastHasOperator()) {
                     backspaceButtonWork();
                     screenShow(R.string.divide);
                 }
@@ -123,11 +123,13 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
+    //inputted operator is already same or not
     private boolean isSameOperator(int operator) {
         return displayValue.charAt(displayValue.length() - 1) == getString(operator).charAt(0);
     }
 
-    private boolean isOperator() {
+    //checking that at last has already a operator or not
+    private boolean atLastHasOperator() {
         return displayValue.charAt(displayValue.length() - 1) == '+' ||
                 displayValue.charAt(displayValue.length() - 1) == '-' ||
                 displayValue.charAt(displayValue.length() - 1) == '*' ||
@@ -172,11 +174,13 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         btnBackspace.setOnClickListener(this);
     }
 
+    //displaying current status
     private void screenShow(int ins) {
         displayValue = displayValue + getString(ins);
         screen.setText(displayValue);
     }
 
+    //removing last value or operator
     private void backspaceButtonWork() {
         if (displayValue.length() > 0) {
             displayValue = displayValue.substring(0, displayValue.length() - 1);
