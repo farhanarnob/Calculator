@@ -1,33 +1,36 @@
 package com.udahoron.arnob.calculator;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
+
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener {
+    CalculationUtilities calculationPart = new CalculationUtilities();
     private TextView screen;
     private String displayValue = "";
     private Button btnNine, btnEight, btnSeven, btnSix, btnFive, btnFour, btnThree, btnTwo, btnOne, btnZero,
             btnPlus, btnMinus, btnMulti, btnDivide, btnEqual, btnBackspace,btnDot,btnRoundBracketOpen,
             btnRoundBracketClose, btnPlusOrMinus;
-    CalculationPart calculationPart = new CalculationPart();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         screen = (TextView) findViewById(R.id.displayID);
-        screen.setText("0");
+        screen.setMovementMethod(new ScrollingMovementMethod());
+        screen.setText(R.string.zero);
         buttonInit();
         btnBackspace.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 displayValue = "";
-                screen.setText("0");
+                screen.setText(R.string.zero);
                 return true;
             }
         });
@@ -40,48 +43,40 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.nine:
-                Toast.makeText(MainActivity.this, "nine", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.nine);
                 break;
             case R.id.eight:
-                Toast.makeText(MainActivity.this, "eight", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.eight);
                 break;
             case R.id.seven:
-                Toast.makeText(MainActivity.this, "seven", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.seven);
                 break;
             case R.id.six:
-                Toast.makeText(MainActivity.this, "six", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.six);
                 break;
             case R.id.five:
-                Toast.makeText(MainActivity.this, "five", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.five);
                 break;
             case R.id.four:
-                Toast.makeText(MainActivity.this, "four", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.four);
                 break;
             case R.id.three:
-                Toast.makeText(MainActivity.this, "three", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.three);
                 break;
             case R.id.two:
-                Toast.makeText(MainActivity.this, "two", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.two);
                 break;
             case R.id.one:
-                Toast.makeText(MainActivity.this, "one", Toast.LENGTH_SHORT).show();
                 screenShow(R.string.one);
                 break;
             case R.id.zero:
-                Toast.makeText(MainActivity.this, "zero", Toast.LENGTH_SHORT).show();
                 if (displayValue.length() != 0)
                     screenShow(R.string.zero);
                 break;
+            case R.id.dot:
+                screenShow(R.string.dot);
+                break;
             case R.id.plus:
-                Toast.makeText(MainActivity.this, "plus", Toast.LENGTH_SHORT).show();
                 if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.plus)) {
                     screenShow(R.string.plus);
                 } else if (displayValue.length() != 0 && atLastHasOperator()) {
@@ -90,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 }
                 break;
             case R.id.minus:
-                Toast.makeText(MainActivity.this, "minus", Toast.LENGTH_SHORT).show();
                 if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.minus)) {
                     screenShow(R.string.minus);
                 } else if (displayValue.length() != 0 && atLastHasOperator()) {
@@ -99,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 }
                 break;
             case R.id.multi:
-                Toast.makeText(MainActivity.this, "multi", Toast.LENGTH_SHORT).show();
                 if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.multi)) {
                     screenShow(R.string.multi);
                 } else if (displayValue.length() != 0 && atLastHasOperator()) {
@@ -108,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 }
                 break;
             case R.id.divide:
-                Toast.makeText(MainActivity.this, "divide", Toast.LENGTH_SHORT).show();
                 if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.divide)) {
                     screenShow(R.string.divide);
                 } else if (displayValue.length() != 0 && atLastHasOperator()) {
@@ -116,13 +108,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.divide);
                 }
                 break;
-
             case R.id.backspace:
                 Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
                 backspaceButtonWork();
-                break;
-            case R.id.dot:
-                Toast.makeText(MainActivity.this, "dot", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.round_bracket_open:
                 Toast.makeText(MainActivity.this, "round_bracket_open", Toast.LENGTH_SHORT).show();
@@ -132,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
             case R.id.equal:
                 Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
+                displayValue = calculationPart.calculate(displayValue);
+                screen.setText(displayValue);
                 break;
             case R.id.plus_or_minus:
                 Toast.makeText(MainActivity.this, "plus_or_minus", Toast.LENGTH_SHORT).show();
@@ -225,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         displayValue = savedInstanceState.getString("SAVE_DISPLAY_VALUE");
-        if(displayValue!="")
+        if (!displayValue.equals(""))
             screen.setText(displayValue);
         super.onRestoreInstanceState(savedInstanceState);
     }

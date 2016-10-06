@@ -7,12 +7,17 @@
     android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.udahoron.arnob.calculator.MainActivity">
+
+    <TextView
+        android:id="@+id/subDisplay"
+        style="@style/subDisplaySizeLand"
+        android:background="@color/displayBackground"
+        android:text="@string/zero" />
     <TextView
         android:id="@+id/displayID"
         style="@style/displaySize"
         android:background="@color/displayBackground"
-        android:maxLength="23"
-        android:text="0"
+        android:text="@string/zero"
         />
     <LinearLayout
         android:layout_width="match_parent"

@@ -8,18 +8,41 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
-    <style name="displaySize">
-        <item name="android:layout_height">130dp</item>
+
+    <style name="subDisplaySize">
+        <item name="android:layout_height">70dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:gravity">bottom|right</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:maxLength">30</item>
+    </style>
+
+    <style name="subDisplaySizeLand">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:gravity">bottom|right</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:maxLength">30</item>
+    </style>
+
+    <style name="displaySize">
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:gravity">bottom|right</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:maxLength">30</item>
     </style>
 
     <style name="displaySizeLand">
-        <item name="android:layout_height">112dp</item>
+        <item name="android:layout_height">62dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">35sp</item>
         <item name="android:gravity">bottom|right</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:maxLength">30</item>
     </style>
     <style name="btn">
         <item name="android:layout_height">match_parent</item>
