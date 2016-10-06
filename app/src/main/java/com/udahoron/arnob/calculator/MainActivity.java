@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     // source: https://developer.android.com/guide/topics/resources/runtime-changes.html
+    // in AndroidManifest.xml file I add configChange attribute to with orientation and screenSize
+    // permission to handle myself so that I can prevent data loss on portrait and landscape view
+    // inter changes.
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
