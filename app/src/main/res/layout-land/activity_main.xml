@@ -10,10 +10,10 @@
 
     <TextView
         android:id="@+id/displayID"
-        style="@style/displaySize"
+        style="@style/displaySizeLand"
         android:background="@color/displayBackground"
         android:maxLength="23"
-        android:text="0" />
+        android:text="@string/zero" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,27 +23,27 @@
 
         <Button
             android:id="@+id/seven"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/seven" />
 
         <Button
             android:id="@+id/eight"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/eight" />
 
         <Button
             android:id="@+id/nine"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/nine" />
 
         <Button
             android:id="@+id/plus"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/plus" />
 
         <Button
             android:id="@+id/backspace"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/backspace" />
     </LinearLayout>
 
@@ -55,27 +55,27 @@
 
         <Button
             android:id="@+id/four"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/four" />
 
         <Button
             android:id="@+id/five"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/five" />
 
         <Button
             android:id="@+id/six"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/six" />
 
         <Button
             android:id="@+id/minus"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/minus" />
 
         <Button
             android:id="@+id/round_bracket_open"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/round_bracket_open" />
     </LinearLayout>
 
@@ -87,27 +87,27 @@
 
         <Button
             android:id="@+id/one"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/one" />
 
         <Button
             android:id="@+id/two"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/two" />
 
         <Button
             android:id="@+id/three"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/three" />
 
         <Button
             android:id="@+id/multi"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/multi" />
 
         <Button
             android:id="@+id/round_bracket_close"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/round_bracket_close" />
     </LinearLayout>
 
@@ -119,27 +119,27 @@
 
         <Button
             android:id="@+id/plus_or_minus"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/plus_or_minus" />
 
         <Button
             android:id="@+id/zero"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/zero" />
 
         <Button
             android:id="@+id/dot"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/dot" />
 
         <Button
             android:id="@+id/divide"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/divide" />
 
         <Button
             android:id="@+id/equal"
-            style="@style/btn"
+            style="@style/btnLand"
             android:text="@string/equal" />
     </LinearLayout>
 </LinearLayout>
