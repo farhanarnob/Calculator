@@ -11,6 +11,7 @@
         android:id="@+id/displayID"
         style="@style/displaySize"
         android:background="@color/displayBackground"
+        android:maxLength="23"
         tools:text="0"
         />
     <LinearLayout
@@ -87,11 +88,13 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/backspace"
             style="@style/btn"
             android:text="@string/backspace"
             />
+
         <Button
             android:id="@+id/zero"
             style="@style/btn"
