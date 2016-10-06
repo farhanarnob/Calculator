@@ -12,7 +12,7 @@
         style="@style/displaySize"
         android:background="@color/displayBackground"
         android:maxLength="23"
-        tools:text="0"
+        android:text="0"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -124,14 +124,14 @@
 
 
         <Button
-            android:id="@+id/future1"
+            android:id="@+id/round_bracket_open"
             style="@style/btn"
-            android:text="@string/extra" />
+            android:text="@string/round_bracket_open" />
 
         <Button
-            android:id="@+id/future2"
+            android:id="@+id/round_bracket_close"
             style="@style/btn"
-            android:text="@string/extra" />
+            android:text="@string/round_bracket_close" />
 
         <Button
             android:id="@+id/equal"

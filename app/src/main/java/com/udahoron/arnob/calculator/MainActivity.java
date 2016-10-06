@@ -12,7 +12,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     private TextView screen;
     private String displayValue = "";
     private Button btnNine, btnEight, btnSeven, btnSix, btnFive, btnFour, btnThree, btnTwo, btnOne, btnZero,
-            btnPlus, btnMinus, btnMulti, btnDivide, btnEqual, btnBackspace;
+            btnPlus, btnMinus, btnMulti, btnDivide, btnEqual, btnBackspace,btnDot,btnRoundBracketOpen,
+            btnRoundBracketClose, btnPlusOrMinus;
+    CalculationPart calculationPart = new CalculationPart();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,12 +116,25 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.divide);
                 }
                 break;
-            case R.id.equal:
-                Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
-                break;
+
             case R.id.backspace:
                 Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
                 backspaceButtonWork();
+                break;
+            case R.id.dot:
+                Toast.makeText(MainActivity.this, "dot", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.round_bracket_open:
+                Toast.makeText(MainActivity.this, "round_bracket_open", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.round_bracket_close:
+                Toast.makeText(MainActivity.this, "round_bracket_close", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.equal:
+                Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.plus_or_minus:
+                Toast.makeText(MainActivity.this, "plus_or_minus", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -156,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         btnDivide = (Button) findViewById(R.id.divide);
         btnEqual = (Button) findViewById(R.id.equal);
         btnBackspace = (Button) findViewById(R.id.backspace);
+        btnDot = (Button) findViewById(R.id.dot);
+        btnRoundBracketOpen = (Button) findViewById(R.id.round_bracket_open);
+        btnRoundBracketClose = (Button) findViewById(R.id.round_bracket_close);
+        btnPlusOrMinus = (Button) findViewById(R.id.plus_or_minus);
 
         btnNine.setOnClickListener(this);
         btnEight.setOnClickListener(this);
@@ -173,6 +192,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         btnDivide.setOnClickListener(this);
         btnEqual.setOnClickListener(this);
         btnBackspace.setOnClickListener(this);
+        btnDot.setOnClickListener(this);
+        btnRoundBracketOpen.setOnClickListener(this);
+        btnRoundBracketClose.setOnClickListener(this);
+        btnPlusOrMinus.setOnClickListener(this);
     }
 
     //displaying current status
@@ -192,19 +215,20 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
-    // source: https://developer.android.com/guide/topics/resources/runtime-changes.html
-    // in AndroidManifest.xml file I add configChange attribute to with orientation and screenSize
-    // permission to handle myself so that I can prevent data loss on portrait and landscape view
-    // inter changes.
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
 
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("SAVE_DISPLAY_VALUE",displayValue);
+        super.onSaveInstanceState(outState);
     }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        displayValue = savedInstanceState.getString("SAVE_DISPLAY_VALUE");
+        if(displayValue!="")
+            screen.setText(displayValue);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
 }

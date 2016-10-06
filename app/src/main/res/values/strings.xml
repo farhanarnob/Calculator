@@ -19,5 +19,6 @@
     <string name="reset">reset</string>
     <string name="plus_or_minus">±</string>
     <string name="dot">.</string>
-    <string name="extra">xtra</string>
+    <string name="round_bracket_open">(</string>
+    <string name="round_bracket_close">)</string>
 </resources>
