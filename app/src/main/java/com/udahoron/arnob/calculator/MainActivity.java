@@ -207,5 +207,4 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

@@ -7,82 +7,110 @@
     android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.udahoron.arnob.calculator.MainActivity">
+
     <TextView
         android:id="@+id/displayID"
         style="@style/displaySize"
         android:background="@color/displayBackground"
         android:maxLength="23"
-        tools:text="0"
-        />
+        tools:text="0" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/seven"
             style="@style/btn"
             android:text="@string/seven" />
+
         <Button
             android:id="@+id/eight"
             style="@style/btn"
-            android:text="@string/eight"
-            />
+            android:text="@string/eight" />
+
         <Button
             android:id="@+id/nine"
             style="@style/btn"
             android:text="@string/nine" />
+
         <Button
             android:id="@+id/plus"
             style="@style/btn"
-            android:text="@string/plus"/>
+            android:text="@string/plus" />
+
+        <Button
+            android:id="@+id/backspace"
+            style="@style/btn"
+            android:text="@string/backspace" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/four"
             style="@style/btn"
             android:text="@string/four" />
+
         <Button
             android:id="@+id/five"
             style="@style/btn"
-            android:text="@string/five"
-            />
+            android:text="@string/five" />
+
         <Button
             android:id="@+id/six"
             style="@style/btn"
             android:text="@string/six" />
+
         <Button
             android:id="@+id/minus"
             style="@style/btn"
-            android:text="@string/minus"/>
+            android:text="@string/minus" />
+
+        <Button
+            android:id="@+id/future1"
+            style="@style/btn"
+            android:text="@string/extra" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/one"
             style="@style/btn"
             android:text="@string/one" />
+
         <Button
             android:id="@+id/two"
             style="@style/btn"
-            android:text="@string/two"
-            />
+            android:text="@string/two" />
+
         <Button
             android:id="@+id/three"
             style="@style/btn"
             android:text="@string/three" />
+
         <Button
             android:id="@+id/multi"
             style="@style/btn"
-            android:text="@string/multi"/>
+            android:text="@string/multi" />
+
+        <Button
+            android:id="@+id/future2"
+            style="@style/btn"
+            android:text="@string/extra" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -92,14 +120,13 @@
         <Button
             android:id="@+id/plus_or_minus"
             style="@style/btn"
-            android:text="@string/plus_or_minus"
-            />
+            android:text="@string/plus_or_minus" />
 
         <Button
             android:id="@+id/zero"
             style="@style/btn"
-            android:text="@string/zero"
-            />
+            android:text="@string/zero" />
+
         <Button
             android:id="@+id/dot"
             style="@style/btn"
@@ -108,30 +135,7 @@
         <Button
             android:id="@+id/divide"
             style="@style/btn"
-            android:text="@string/divide"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/backspace"
-            style="@style/btn"
-            android:text="@string/backspace" />
-
-
-        <Button
-            android:id="@+id/future1"
-            style="@style/btn"
-            android:text="@string/extra" />
-
-        <Button
-            android:id="@+id/future2"
-            style="@style/btn"
-            android:text="@string/extra" />
+            android:text="@string/divide" />
 
         <Button
             android:id="@+id/equal"

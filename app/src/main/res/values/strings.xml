@@ -17,4 +17,7 @@
     <string name="equal">=</string>
     <string name="backspace">⌫</string>
     <string name="reset">reset</string>
+    <string name="plus_or_minus">±</string>
+    <string name="dot">.</string>
+    <string name="extra">xtra</string>
 </resources>
