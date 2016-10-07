@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 }
                 break;
             case R.id.multi:
-                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi))) {
+                if ((displayValue.length() != 0) && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi)))
                     screenShow(R.string.multi);
-                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
+                else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
                     backspaceButtonWork();
                     screenShow(R.string.multi);
                 }
@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
         }
     }
-
 
     //Button initialization
     private void buttonInit() {

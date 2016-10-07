@@ -11,12 +11,18 @@ public class CalculationUtilities {
     private String numberTwo = "";
     private String latestOperator = "";
     private IdentifyOperatorNumberAndDot identifyOperator = new IdentifyOperatorNumberAndDot();
-
+    private boolean flag;
     public String calculate(String displayValue) {
+        Log.d("CalculationUtilities", numberOne + "**" + displayValue);
+        if (displayValue.charAt(0) == '-' && !identifyOperator.hasOperator(displayValue.substring(1))) {
+            if (numberTwo.equals("")) {
+                return displayValue;
+            }
+        }
         if (displayValue.length() > 0 && identifyOperator.isOperator(displayValue.substring(displayValue.length() - 1))) {
             displayValue = displayValue.substring(0, displayValue.length() - 1);
         }
-        if (identifyOperator.hasOperator(displayValue)) {
+        if (identifyOperator.hasOperator(displayValue.substring(1))) {
             numberOne = "";
             numberTwo = "";
             latestOperator = "";
@@ -32,6 +38,10 @@ public class CalculationUtilities {
     }
 
     private String startToCalculate(String displayValue) {
+        if (displayValue.charAt(0) == '-') {
+            flag = true;
+            displayValue = displayValue.substring(1);
+        }
         for (int i = 0; i < displayValue.length(); i++) {
             String substring = displayValue.substring(i, i + 1);
             if (identifyOperator.isNumber(substring) || identifyOperator.isDot(substring)) {
@@ -39,18 +49,23 @@ public class CalculationUtilities {
             } else if (identifyOperator.isOperator(substring)) {
                 if (latestOperator.equals("") && (i + 1) != displayValue.length()) {
                     latestOperator = substring;
-                    numberOne = numberTwo;
+                    if (flag) {
+                        numberOne = "-" + numberTwo;
+                        flag = false;
+                    } else {
+                        numberOne = numberTwo;
+                    }
                     numberTwo = "";
-                } else if (!latestOperator.equals("") && !numberOne.equals("") && !numberTwo.equals("")) {
+                } else if (!latestOperator.equals("") && (!numberOne.equals("") || !numberOne.equals("-")) && !numberTwo.equals("")) {
                     calculation();
                     if (identifyOperator.hasOperator(displayValue.substring(i))) {
-                        Log.d("CalculationUtilities", displayValue);
                         numberTwo = "";
                         latestOperator = substring;
                     }
                 }
             }
         }
+
         calculation();
         return numberOne;
     }
