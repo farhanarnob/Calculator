@@ -9,8 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
+import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener {
+    public IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
     CalculationUtilities calculationPart = new CalculationUtilities();
     private TextView screen;
     private String displayValue = "";
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             }
         });
 
-
+        identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
     }
 
     // implementing lister of the button
@@ -77,33 +79,35 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 screenShow(R.string.dot);
                 break;
             case R.id.plus:
-                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.plus)) {
+                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.plus))) {
                     screenShow(R.string.plus);
-                } else if (displayValue.length() != 0 && atLastHasOperator()) {
+                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
                     backspaceButtonWork();
                     screenShow(R.string.plus);
                 }
                 break;
             case R.id.minus:
-                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.minus)) {
+                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.minus))) {
                     screenShow(R.string.minus);
-                } else if (displayValue.length() != 0 && atLastHasOperator()) {
+                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
                     backspaceButtonWork();
+                    screenShow(R.string.minus);
+                } else if (displayValue.length() == 0) {
                     screenShow(R.string.minus);
                 }
                 break;
             case R.id.multi:
-                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.multi)) {
+                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi))) {
                     screenShow(R.string.multi);
-                } else if (displayValue.length() != 0 && atLastHasOperator()) {
+                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
                     backspaceButtonWork();
                     screenShow(R.string.multi);
                 }
                 break;
             case R.id.divide:
-                if (displayValue.length() != 0 && !atLastHasOperator() && !isSameOperator(R.id.divide)) {
+                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.divide))) {
                     screenShow(R.string.divide);
-                } else if (displayValue.length() != 0 && atLastHasOperator()) {
+                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
                     backspaceButtonWork();
                     screenShow(R.string.divide);
                 }
@@ -124,22 +128,19 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 screen.setText(displayValue);
                 break;
             case R.id.plus_or_minus:
-                Toast.makeText(MainActivity.this, "plus_or_minus", Toast.LENGTH_SHORT).show();
+                if (displayValue.length() != 0) {
+                    if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
+                        if (!displayValue.substring(0, 1).equals("-")) {
+                            displayValue = "-" + displayValue;
+                            screen.setText(displayValue);
+                        } else if (displayValue.substring(0, 1).equals("-")) {
+                            displayValue = displayValue.substring(1);
+                            screen.setText(displayValue);
+                        }
+                    }
+                }
                 break;
         }
-    }
-
-    //inputted operator is already same or not
-    private boolean isSameOperator(int operator) {
-        return displayValue.charAt(displayValue.length() - 1) == getString(operator).charAt(0);
-    }
-
-    //checking that at last has already a operator or not
-    private boolean atLastHasOperator() {
-        return displayValue.charAt(displayValue.length() - 1) == '+' ||
-                displayValue.charAt(displayValue.length() - 1) == '-' ||
-                displayValue.charAt(displayValue.length() - 1) == '*' ||
-                displayValue.charAt(displayValue.length() - 1) == '/';
     }
 
 
