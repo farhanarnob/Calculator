@@ -1,5 +1,7 @@
 package com.udahoron.arnob.calculator.calculation;
 
+import android.util.Log;
+
 /**
  * Created by ${farhanarnob} on 06-Oct-16.
  */
@@ -34,14 +36,18 @@ public class CalculationUtilities {
             String substring = displayValue.substring(i, i + 1);
             if (identifyOperator.isNumber(substring) || identifyOperator.isDot(substring)) {
                 numberTwo += substring;
-            }
-            if (identifyOperator.isOperator(substring)) {
+            } else if (identifyOperator.isOperator(substring)) {
                 if (latestOperator.equals("") && (i + 1) != displayValue.length()) {
                     latestOperator = substring;
                     numberOne = numberTwo;
                     numberTwo = "";
-                } else if (!latestOperator.equals("") && (i + 1) != displayValue.length()) {
+                } else if (!latestOperator.equals("") && !numberOne.equals("") && !numberTwo.equals("")) {
                     calculation();
+                    if (identifyOperator.hasOperator(displayValue.substring(i))) {
+                        Log.d("CalculationUtilities", displayValue);
+                        numberTwo = "";
+                        latestOperator = substring;
+                    }
                 }
             }
         }
@@ -73,7 +79,9 @@ public class CalculationUtilities {
     private String rounding(Double value) {
         if (value % 1 != 0) {
             return String.format("%.2f", value);
+        } else {
+            return String.valueOf(Math.round(value));
         }
-        return String.valueOf(Math.round(value));
+
     }
 }
