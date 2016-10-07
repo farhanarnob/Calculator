@@ -13,9 +13,11 @@ import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener {
     public IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
-    CalculationUtilities calculationPart = new CalculationUtilities();
+    CalculationUtilities calculationUtilities = new CalculationUtilities();
     private TextView screen;
+    private TextView subScreen;
     private String displayValue = "";
+    private String subDisplayValue = "";
     private Button btnNine, btnEight, btnSeven, btnSix, btnFive, btnFour, btnThree, btnTwo, btnOne, btnZero,
             btnPlus, btnMinus, btnMulti, btnDivide, btnEqual, btnBackspace,btnDot,btnRoundBracketOpen,
             btnRoundBracketClose, btnPlusOrMinus;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         screen = (TextView) findViewById(R.id.displayID);
+        subScreen = (TextView) findViewById(R.id.subDisplay);
         screen.setMovementMethod(new ScrollingMovementMethod());
         screen.setText(R.string.zero);
         buttonInit();
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             @Override
             public boolean onLongClick(View v) {
                 displayValue = "";
+                subScreen.setText(R.string.zero);
                 screen.setText(R.string.zero);
                 return true;
             }
@@ -124,8 +128,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
             case R.id.equal:
                 Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
-                displayValue = calculationPart.calculate(displayValue);
+                subDisplayValue = displayValue + calculationUtilities.recentOperator() + calculationUtilities.recentSecondValue();
+                subScreen.setText(subDisplayValue);
+                displayValue = calculationUtilities.calculate(displayValue);
                 screen.setText(displayValue);
+
                 break;
             case R.id.plus_or_minus:
                 if (displayValue.length() != 0) {

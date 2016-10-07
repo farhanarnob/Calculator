@@ -1,9 +1,7 @@
 package com.udahoron.arnob.calculator.calculation;
 
-import android.util.Log;
-
 /**
- * Created by ${farhanarnob} on 06-Oct-16.
+ * Created by ${farhanarnob} on ${06-Oct-16}.
  */
 
 public class CalculationUtilities {
@@ -13,7 +11,6 @@ public class CalculationUtilities {
     private IdentifyOperatorNumberAndDot identifyOperator = new IdentifyOperatorNumberAndDot();
     private boolean flag;
     public String calculate(String displayValue) {
-        Log.d("CalculationUtilities", numberOne + "**" + displayValue);
         if (displayValue.charAt(0) == '-' && !identifyOperator.hasOperator(displayValue.substring(1))) {
             if (numberTwo.equals("")) {
                 return displayValue;
@@ -98,5 +95,13 @@ public class CalculationUtilities {
             return String.valueOf(Math.round(value));
         }
 
+    }
+
+    public String recentSecondValue() {
+        return numberTwo;
+    }
+
+    public String recentOperator() {
+        return latestOperator;
     }
 }
