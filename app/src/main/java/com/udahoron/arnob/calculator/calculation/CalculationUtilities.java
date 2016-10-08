@@ -8,18 +8,21 @@ public class CalculationUtilities {
     private String numberOne = "";
     private String numberTwo = "";
     private String latestOperator = "";
-    private IdentifyOperatorNumberAndDot identifyOperator = new IdentifyOperatorNumberAndDot();
+    private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
     private boolean flag;
     public String calculate(String displayValue) {
-        if (displayValue.charAt(0) == '-' && !identifyOperator.hasOperator(displayValue.substring(1))) {
+        if (displayValue.length() == 0) {
+            return "0";
+        }
+        if (displayValue.length() > 0 && displayValue.charAt(0) == '-' && !identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
             if (numberTwo.equals("")) {
                 return displayValue;
             }
         }
-        if (displayValue.length() > 0 && identifyOperator.isOperator(displayValue.substring(displayValue.length() - 1))) {
+        if (displayValue.length() > 0 && identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
             displayValue = displayValue.substring(0, displayValue.length() - 1);
         }
-        if (identifyOperator.hasOperator(displayValue.substring(1))) {
+        if (displayValue.length() > 0 && identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
             numberOne = "";
             numberTwo = "";
             latestOperator = "";
@@ -41,9 +44,9 @@ public class CalculationUtilities {
         }
         for (int i = 0; i < displayValue.length(); i++) {
             String substring = displayValue.substring(i, i + 1);
-            if (identifyOperator.isNumber(substring) || identifyOperator.isDot(substring)) {
+            if (identifyOperatorNumberAndDot.isNumber(substring) || identifyOperatorNumberAndDot.isDot(substring)) {
                 numberTwo += substring;
-            } else if (identifyOperator.isOperator(substring)) {
+            } else if (identifyOperatorNumberAndDot.isOperator(substring)) {
                 if (latestOperator.equals("") && (i + 1) != displayValue.length()) {
                     latestOperator = substring;
                     if (flag) {
@@ -55,7 +58,7 @@ public class CalculationUtilities {
                     numberTwo = "";
                 } else if (!latestOperator.equals("") && (!numberOne.equals("") || !numberOne.equals("-")) && !numberTwo.equals("")) {
                     calculation();
-                    if (identifyOperator.hasOperator(displayValue.substring(i))) {
+                    if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(i))) {
                         numberTwo = "";
                         latestOperator = substring;
                     }
@@ -95,6 +98,22 @@ public class CalculationUtilities {
             return String.valueOf(Math.round(value));
         }
 
+    }
+
+    public String regardingPlusMinusBtn(String displayValue) {
+        if (displayValue.length() != 0) {
+            if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
+                if (!displayValue.substring(0, 1).equals("-")) {
+                    displayValue = "-" + displayValue;
+                    return displayValue;
+                } else if (displayValue.substring(0, 1).equals("-")) {
+                    displayValue = displayValue.substring(1);
+                    return displayValue;
+
+                }
+            }
+        }
+        return displayValue;
     }
 
     public String recentSecondValue() {

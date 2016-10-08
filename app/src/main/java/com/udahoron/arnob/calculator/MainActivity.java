@@ -96,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
                     backspaceButtonWork();
                     screenShow(R.string.minus);
-                } else if (displayValue.length() == 0) {
-                    screenShow(R.string.minus);
                 }
                 break;
             case R.id.multi:
@@ -135,17 +133,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
                 break;
             case R.id.plus_or_minus:
-                if (displayValue.length() != 0) {
-                    if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
-                        if (!displayValue.substring(0, 1).equals("-")) {
-                            displayValue = "-" + displayValue;
-                            screen.setText(displayValue);
-                        } else if (displayValue.substring(0, 1).equals("-")) {
-                            displayValue = displayValue.substring(1);
-                            screen.setText(displayValue);
-                        }
-                    }
+                displayValue = calculationUtilities.regardingPlusMinusBtn(displayValue);
+                if (displayValue.length() > 0) {
+                    screen.setText(displayValue);
                 }
+
                 break;
         }
     }
