@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 displayValue = "";
                 subScreen.setText(R.string.zero);
                 screen.setText(R.string.zero);
-                calculationUtilities.setLatestOperator("");
-                calculationUtilities.setNumberOne("");
-                calculationUtilities.setNumberTwo("");
+                deleteNumberOneNumberTwoLastOperator();
                 return true;
             }
         });
@@ -106,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.plus);
                     btnDot.setOnClickListener(this);
                 }
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.minus:
                 if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.minus))) {
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.minus);
                     btnDot.setOnClickListener(this);
                 }
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.multi:
                 if ((displayValue.length() != 0) && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi))) {
@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.multi);
                     btnDot.setOnClickListener(this);
                 }
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.divide:
                 if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.divide))) {
@@ -137,14 +138,20 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.divide);
                     btnDot.setOnClickListener(this);
                 }
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.backspace:
                 Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
+                deleteNumberOneNumberTwoLastOperator();
                 displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
                 if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
                     btnDot.setOnClickListener(MainActivity.this);
                 }
-                screen.setText(displayValue);
+                if (displayValue.length() != 0) {
+                    screen.setText(displayValue);
+                } else {
+                    screen.setText("0");
+                }
                 break;
             case R.id.round_bracket_open:
                 Toast.makeText(MainActivity.this, "round_bracket_open", Toast.LENGTH_SHORT).show();
@@ -225,6 +232,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     //displaying current status
     private void screenShow(int ins) {
         displayValue = displayValue + getString(ins);
+        if (identifyOperatorNumberAndDot.hasDot(displayValue)) {
+            btnDot.setOnClickListener(null);
+        }
         screen.setText(displayValue);
     }
 
@@ -243,5 +253,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    private void deleteNumberOneNumberTwoLastOperator() {
+        calculationUtilities.setNumberOne("");
+        calculationUtilities.setNumberTwo("");
+        calculationUtilities.setLatestOperator("");
+    }
 
 }

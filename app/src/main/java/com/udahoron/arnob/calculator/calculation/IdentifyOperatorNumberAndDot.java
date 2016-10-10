@@ -24,6 +24,14 @@ public class IdentifyOperatorNumberAndDot {
         return number.charAt(0) >= '0' && number.charAt(0) <= '9';
     }
 
+    public boolean hasDot(String dot) {
+        for (int i = 0; i < dot.length(); i++) {
+            if (dot.substring(i, i + 1).equals(".")) {
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean isDot(String dot) {
         return dot.charAt(0) == '.';
     }

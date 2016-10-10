@@ -19,6 +19,9 @@ public class CalculationUtilities {
                 return displayValue;
             }
         }
+        if (displayValue.length() > 0 && identifyOperatorNumberAndDot.isDot(displayValue.substring(displayValue.length() - 1))) {
+            displayValue = displayValue.substring(0, displayValue.length() - 1);
+        }
         if (displayValue.length() > 0 && identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
             displayValue = displayValue.substring(0, displayValue.length() - 1);
         }
