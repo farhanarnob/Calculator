@@ -8,12 +8,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.udahoron.arnob.calculator.buttonChecker.ButtonFunctionCheck;
 import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
 import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
+
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener {
-    public IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
     CalculationUtilities calculationUtilities = new CalculationUtilities();
+    private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
+    private ButtonFunctionCheck buttonFunctionCheck = new ButtonFunctionCheck();
     private TextView screen;
     private TextView subScreen;
     private String displayValue = "";
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 displayValue = "";
                 subScreen.setText(R.string.zero);
                 screen.setText(R.string.zero);
+                calculationUtilities.setLatestOperator("");
+                calculationUtilities.setNumberOne("");
+                calculationUtilities.setNumberTwo("");
                 return true;
             }
         });
@@ -80,43 +86,65 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screenShow(R.string.zero);
                 break;
             case R.id.dot:
-                screenShow(R.string.dot);
+                if (displayValue.length() == 0) {
+                    displayValue = "0";
+                    screenShow(R.string.dot);
+                    btnDot.setOnClickListener(null);
+                } else {
+                    displayValue = displayValue + ".";
+                    screen.setText(displayValue);
+                    btnDot.setOnClickListener(null);
+                }
+
                 break;
             case R.id.plus:
                 if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.plus))) {
                     screenShow(R.string.plus);
+                    btnDot.setOnClickListener(this);
                 } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    backspaceButtonWork();
+                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
                     screenShow(R.string.plus);
+                    btnDot.setOnClickListener(this);
                 }
                 break;
             case R.id.minus:
                 if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.minus))) {
                     screenShow(R.string.minus);
+                    btnDot.setOnClickListener(this);
                 } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    backspaceButtonWork();
+                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
                     screenShow(R.string.minus);
+                    btnDot.setOnClickListener(this);
                 }
                 break;
             case R.id.multi:
-                if ((displayValue.length() != 0) && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi)))
+                if ((displayValue.length() != 0) && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi))) {
                     screenShow(R.string.multi);
+                    btnDot.setOnClickListener(this);
+                }
                 else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    backspaceButtonWork();
+                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
                     screenShow(R.string.multi);
+                    btnDot.setOnClickListener(this);
                 }
                 break;
             case R.id.divide:
                 if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.divide))) {
                     screenShow(R.string.divide);
+                    btnDot.setOnClickListener(this);
                 } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    backspaceButtonWork();
+                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
                     screenShow(R.string.divide);
+                    btnDot.setOnClickListener(this);
                 }
                 break;
             case R.id.backspace:
                 Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
-                backspaceButtonWork();
+                displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
+                    btnDot.setOnClickListener(MainActivity.this);
+                }
+                screen.setText(displayValue);
                 break;
             case R.id.round_bracket_open:
                 Toast.makeText(MainActivity.this, "round_bracket_open", Toast.LENGTH_SHORT).show();
@@ -126,14 +154,21 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
             case R.id.equal:
                 Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
-                subDisplayValue = displayValue + calculationUtilities.recentOperator() + calculationUtilities.recentSecondValue();
-                subScreen.setText(subDisplayValue);
+                if (displayValue.length() > 0) {
+                    if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(displayValue.length() - 1))) {
+                        subDisplayValue = displayValue.substring(0, displayValue.length() - 1) + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
+                    } else {
+                        subDisplayValue = displayValue + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
+                    }
+                    subScreen.setText(subDisplayValue);
+                }
                 displayValue = calculationUtilities.calculate(displayValue);
-                screen.setText(displayValue);
-
+                if (displayValue.length() > 0) {
+                    screen.setText(displayValue);
+                }
                 break;
             case R.id.plus_or_minus:
-                displayValue = calculationUtilities.regardingPlusMinusBtn(displayValue);
+                displayValue = buttonFunctionCheck.regardingPlusMinusBtn(displayValue);
                 if (displayValue.length() > 0) {
                     screen.setText(displayValue);
                 }
@@ -191,17 +226,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     private void screenShow(int ins) {
         displayValue = displayValue + getString(ins);
         screen.setText(displayValue);
-    }
-
-    //removing last value or operator
-    private void backspaceButtonWork() {
-        if (displayValue.length() > 0) {
-            displayValue = displayValue.substring(0, displayValue.length() - 1);
-            screen.setText(displayValue);
-        }
-        if (displayValue.length() == 0) {
-            screen.setText("0");
-        }
     }
 
 

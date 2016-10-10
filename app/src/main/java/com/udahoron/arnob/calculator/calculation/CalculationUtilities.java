@@ -12,7 +12,7 @@ public class CalculationUtilities {
     private boolean flag;
     public String calculate(String displayValue) {
         if (displayValue.length() == 0) {
-            return "0";
+            return "";
         }
         if (displayValue.length() > 0 && displayValue.charAt(0) == '-' && !identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
             if (numberTwo.equals("")) {
@@ -100,27 +100,28 @@ public class CalculationUtilities {
 
     }
 
-    public String regardingPlusMinusBtn(String displayValue) {
-        if (displayValue.length() != 0) {
-            if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
-                if (!displayValue.substring(0, 1).equals("-")) {
-                    displayValue = "-" + displayValue;
-                    return displayValue;
-                } else if (displayValue.substring(0, 1).equals("-")) {
-                    displayValue = displayValue.substring(1);
-                    return displayValue;
-
-                }
-            }
-        }
-        return displayValue;
+    public String getNumberOne() {
+        return numberOne;
     }
 
-    public String recentSecondValue() {
+    public void setNumberOne(String numberOne) {
+        this.numberOne = numberOne;
+    }
+
+    public String getNumberTwo() {
         return numberTwo;
     }
 
-    public String recentOperator() {
+    public void setNumberTwo(String numberTwo) {
+        this.numberTwo = numberTwo;
+    }
+
+    public String getLatestOperator() {
         return latestOperator;
     }
+
+    public void setLatestOperator(String latestOperator) {
+        this.latestOperator = latestOperator;
+    }
+
 }

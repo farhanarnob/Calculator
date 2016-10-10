@@ -1,5 +1,7 @@
 package com.udahoron.arnob.calculator.calculation;
 
+import android.util.Log;
+
 /**
  * Created by farhanarnob on 06-Oct-16.
  */
@@ -28,10 +30,11 @@ public class IdentifyOperatorNumberAndDot {
 
     //checking that at last has already a operator or not
     public boolean atLastHasOperator(String displayValue) {
-        return displayValue.charAt(displayValue.length() - 1) == '+' ||
-                displayValue.charAt(displayValue.length() - 1) == '-' ||
-                displayValue.charAt(displayValue.length() - 1) == '*' ||
-                displayValue.charAt(displayValue.length() - 1) == '/';
+        Log.d("IdentifyOperator+d", displayValue.substring(displayValue.length() - 1));
+        return (displayValue.substring(displayValue.length() - 1).equals("+") ||
+                displayValue.substring(displayValue.length() - 1).equals("-") ||
+                displayValue.substring(displayValue.length() - 1).equals("*") ||
+                displayValue.substring(displayValue.length() - 1).equals("/"));
     }
 
     //inputted operator is already same or not
