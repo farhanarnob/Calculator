@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 subScreen.setText(R.string.zero);
                 screen.setText(R.string.zero);
                 deleteNumberOneNumberTwoLastOperator();
+                if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
+                    btnDot.setOnClickListener(MainActivity.this);
+                }
                 return true;
             }
         });
@@ -106,50 +109,21 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
                 break;
             case R.id.plus:
-                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.plus))) {
-                    screenShow(R.string.plus);
-                    btnDot.setOnClickListener(this);
-                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                    screenShow(R.string.plus);
-                    btnDot.setOnClickListener(this);
-                }
-                deleteNumberOneNumberTwoLastOperator();
+                operatorButtonWork(R.string.plus);
                 break;
+
             case R.id.minus:
-                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.minus))) {
-                    screenShow(R.string.minus);
-                    btnDot.setOnClickListener(this);
-                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                    screenShow(R.string.minus);
-                    btnDot.setOnClickListener(this);
-                }
-                deleteNumberOneNumberTwoLastOperator();
+                operatorButtonWork(R.string.minus);
                 break;
+
             case R.id.multi:
-                if ((displayValue.length() != 0) && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.multi))) {
-                    screenShow(R.string.multi);
-                    btnDot.setOnClickListener(this);
-                }
-                else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                    screenShow(R.string.multi);
-                    btnDot.setOnClickListener(this);
-                }
-                deleteNumberOneNumberTwoLastOperator();
+                operatorButtonWork(R.string.multi);
                 break;
+
             case R.id.divide:
-                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(R.string.divide))) {
-                    screenShow(R.string.divide);
-                    btnDot.setOnClickListener(this);
-                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                    screenShow(R.string.divide);
-                    btnDot.setOnClickListener(this);
-                }
-                deleteNumberOneNumberTwoLastOperator();
+                operatorButtonWork(R.string.divide);
                 break;
+
             case R.id.backspace:
                 Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
                 deleteNumberOneNumberTwoLastOperator();
@@ -167,16 +141,28 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     screen.setText("0");
                 }
                 break;
+
             case R.id.round_bracket_open:
                 Toast.makeText(MainActivity.this, "round_bracket_open", Toast.LENGTH_SHORT).show();
+
                 break;
+
             case R.id.round_bracket_close:
                 Toast.makeText(MainActivity.this, "round_bracket_close", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.equal:
                 Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
-                if (displayValue.equals("Infinity")) {
+                if (displayValue.equals("Infinity") || displayValue.equals("")) {
                     deleteNumberOneNumberTwoLastOperator();
+                    subDisplayValue = displayValue;
+                    subScreen.setText("0");
+                }
+                if (displayValue.equals("0")) {
+                    displayValue = "";
+                    deleteNumberOneNumberTwoLastOperator();
+                    subDisplayValue = displayValue;
+                    subScreen.setText("0");
                 }
                 if (displayValue.length() > 0) {
                     if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(displayValue.length() - 1))) {
@@ -186,6 +172,18 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     }
                     subScreen.setText(subDisplayValue);
                 }
+                if (displayValue.equals("0")) {
+                    displayValue = "";
+                    deleteNumberOneNumberTwoLastOperator();
+                    subDisplayValue = displayValue;
+                    subScreen.setText("0");
+                }
+                if (displayValue.equals("Infinity") || displayValue.equals("")) {
+                    deleteNumberOneNumberTwoLastOperator();
+                    subDisplayValue = displayValue;
+                    subScreen.setText("0");
+                }
+
                 displayValue = calculationUtilities.calculate(displayValue);
                 if (displayValue.length() > 0) {
                     screen.setText(displayValue);
@@ -194,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     btnDot.setOnClickListener(null);
                 }
                 break;
+
             case R.id.plus_or_minus:
                 displayValue = buttonFunctionCheck.regardingPlusMinusBtn(displayValue);
                 if (displayValue.length() > 0) {
@@ -285,4 +284,15 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         calculationUtilities.setLatestOperator("");
     }
 
+    private void operatorButtonWork(int id) {
+        if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))) {
+            screenShow(id);
+            btnDot.setOnClickListener(this);
+        } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
+            displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+            screenShow(id);
+            btnDot.setOnClickListener(this);
+        }
+        deleteNumberOneNumberTwoLastOperator();
+    }
 }
