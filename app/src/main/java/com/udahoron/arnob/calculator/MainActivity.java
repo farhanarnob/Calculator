@@ -54,34 +54,44 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         switch (v.getId()) {
             case R.id.nine:
                 screenShow(R.string.nine);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.eight:
                 screenShow(R.string.eight);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.seven:
                 screenShow(R.string.seven);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.six:
                 screenShow(R.string.six);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.five:
                 screenShow(R.string.five);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.four:
                 screenShow(R.string.four);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.three:
                 screenShow(R.string.three);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.two:
                 screenShow(R.string.two);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.one:
                 screenShow(R.string.one);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.zero:
                 if (displayValue.length() != 0)
                     screenShow(R.string.zero);
+                deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.dot:
                 if (displayValue.length() == 0) {
@@ -143,7 +153,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             case R.id.backspace:
                 Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
                 deleteNumberOneNumberTwoLastOperator();
-                displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                if (displayValue.equals("Infinity")) {
+                    displayValue = "";
+                } else {
+                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                }
                 if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
                     btnDot.setOnClickListener(MainActivity.this);
                 }
@@ -161,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
             case R.id.equal:
                 Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
+                if (displayValue.equals("Infinity")) {
+                    deleteNumberOneNumberTwoLastOperator();
+                }
                 if (displayValue.length() > 0) {
                     if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(displayValue.length() - 1))) {
                         subDisplayValue = displayValue.substring(0, displayValue.length() - 1) + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
@@ -173,13 +190,16 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 if (displayValue.length() > 0) {
                     screen.setText(displayValue);
                 }
+                if (!buttonFunctionCheck.permissionDotEnable(displayValue)) {
+                    btnDot.setOnClickListener(null);
+                }
                 break;
             case R.id.plus_or_minus:
                 displayValue = buttonFunctionCheck.regardingPlusMinusBtn(displayValue);
                 if (displayValue.length() > 0) {
                     screen.setText(displayValue);
                 }
-
+                deleteNumberOneNumberTwoLastOperator();
                 break;
         }
     }
@@ -231,11 +251,16 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     //displaying current status
     private void screenShow(int ins) {
+        if (displayValue.equals("Infinity")) {
+            displayValue = "";
+        }
         displayValue = displayValue + getString(ins);
         if (identifyOperatorNumberAndDot.hasDot(displayValue)) {
             btnDot.setOnClickListener(null);
         }
+
         screen.setText(displayValue);
+
     }
 
 
@@ -248,8 +273,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         displayValue = savedInstanceState.getString("SAVE_DISPLAY_VALUE");
-        if (!displayValue.equals(""))
+        if (!displayValue.equals("")) {
             screen.setText(displayValue);
+        }
         super.onRestoreInstanceState(savedInstanceState);
     }
 

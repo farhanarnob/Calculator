@@ -36,11 +36,13 @@
         <Button
             android:id="@+id/nine"
             style="@style/btn"
+
             android:text="@string/nine" />
+
         <Button
-            android:id="@+id/plus"
+            android:id="@+id/backspace"
             style="@style/btn"
-            android:text="@string/plus"/>
+            android:text="@string/backspace" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,9 +63,10 @@
             style="@style/btn"
             android:text="@string/six" />
         <Button
-            android:id="@+id/minus"
+            android:id="@+id/plus"
             style="@style/btn"
-            android:text="@string/minus"/>
+            android:text="@string/plus" />
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,9 +87,10 @@
             style="@style/btn"
             android:text="@string/three" />
         <Button
-            android:id="@+id/multi"
+            android:id="@+id/minus"
             style="@style/btn"
-            android:text="@string/multi"/>
+            android:text="@string/minus" />
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -109,11 +113,11 @@
             android:id="@+id/dot"
             style="@style/btn"
             android:text="@string/dot" />
-
         <Button
-            android:id="@+id/divide"
+            android:id="@+id/multi"
             style="@style/btn"
-            android:text="@string/divide"/>
+            android:text="@string/multi" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -121,11 +125,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/backspace"
-            style="@style/btn"
-            android:text="@string/backspace" />
 
 
         <Button
@@ -137,10 +136,15 @@
             android:id="@+id/round_bracket_close"
             style="@style/btn"
             android:text="@string/round_bracket_close" />
-
         <Button
             android:id="@+id/equal"
             style="@style/btn"
             android:text="@string/equal" />
+
+        <Button
+            android:id="@+id/divide"
+            style="@style/btn"
+            android:text="@string/divide" />
+
     </LinearLayout>
 </LinearLayout>
