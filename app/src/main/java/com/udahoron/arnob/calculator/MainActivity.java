@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void equalButtonFunction() {
+        roundBracketFlag = false;
         if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
             deleteNumberOneNumberTwoLastOperator();
             btnDot.setOnClickListener(MainActivity.this);
