@@ -3,7 +3,7 @@ package com.udahoron.arnob.calculator.buttonChecker;
 import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
 /**
- * Created by ${farhanarnob} on ${06-Oct-16}.
+ * Created by farhanarnob on 06-Oct-16.
  */
 
 public class ButtonFunctionCheck {

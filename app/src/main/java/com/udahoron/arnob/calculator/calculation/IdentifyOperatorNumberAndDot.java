@@ -38,10 +38,17 @@ public class IdentifyOperatorNumberAndDot {
     public boolean isBracketOpen(String bracketOpen) {
         return bracketOpen.equals("(");
     }
+
+    public boolean isBracketClose(String bracketClose) {
+        return bracketClose.equals(")");
+    }
     public boolean isDot(String dot) {
         return dot.charAt(0) == '.';
     }
 
+    public boolean isMinus(String minus) {
+        return minus.charAt(0) == '-';
+    }
     //checking that at last has already a operator or not
     public boolean atLastHasOperator(String displayValue) {
         Log.d("IdentifyOperator+d", displayValue.substring(displayValue.length() - 1));

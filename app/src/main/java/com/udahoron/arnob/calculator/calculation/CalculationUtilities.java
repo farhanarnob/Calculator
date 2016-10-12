@@ -1,13 +1,16 @@
 package com.udahoron.arnob.calculator.calculation;
 
+import java.util.Stack;
+
 /**
- * Created by ${farhanarnob} on ${06-Oct-16}.
+ * Created by farhanarnob on ${06-Oct-16}.
  */
 
 public class CalculationUtilities {
     private String numberOne = "";
     private String numberTwo = "";
     private String latestOperator = "";
+    private Stack<String> bracket = new Stack<>();
     private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
     private boolean flag;
     public String calculate(String displayValue) {
@@ -57,6 +60,18 @@ public class CalculationUtilities {
         }
         for (int i = 0; i < displayValue.length(); i++) {
             String substring = displayValue.substring(i, i + 1);
+            if (substring.equals("(")) {
+                bracket.push(substring);
+                continue;
+            }
+            if (substring.equals(")")) {
+                bracket.pop();
+                continue;
+            }
+            if (!bracket.empty()) {
+                numberTwo = numberTwo + substring;
+                continue;
+            }
             if (identifyOperatorNumberAndDot.isNumber(substring) || identifyOperatorNumberAndDot.isDot(substring)) {
                 numberTwo += substring;
             } else if (identifyOperatorNumberAndDot.isOperator(substring)) {

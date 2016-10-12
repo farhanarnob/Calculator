@@ -3,7 +3,6 @@ package com.udahoron.arnob.calculator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -201,17 +200,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         if (displayValue.equals("Infinity")) {
             displayValue = "";
         }
-        if (identifyOperatorNumberAndDot.isOperator(getString(ins))) {
-            if (displayValue.charAt(displayValue.length() - 1) == '.') {
-                displayValue = displayValue + "0";
-            }
-            if (roundBracketFlag && !buttonFunctionCheck.minusAsNumberSymbol(displayValue)) {
-                roundBracketFlag = false;
-                displayValue = displayValue + ")";
-                Log.d("LOG", displayValue);
 
-            }
-        }
         displayValue = displayValue + getString(ins);
         if (identifyOperatorNumberAndDot.hasDot(displayValue)) {
             btnDot.setOnClickListener(null);
@@ -244,6 +233,19 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void operatorButtonWork(int id) {
+        if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
+            if (displayValue.charAt(displayValue.length() - 1) == '.') {
+                displayValue = displayValue + "0";
+            }
+            if (roundBracketFlag && !buttonFunctionCheck.minusAsNumberSymbol(displayValue)) {
+                roundBracketFlag = false;
+                if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(displayValue.length() - 1))) {
+                    displayValue = displayValue + "0)";
+                } else {
+                    displayValue = displayValue + ")";
+                }
+            }
+        }
         if (displayValue.charAt(displayValue.length() - 1) != '(') {
             if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
                     && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
@@ -306,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             subDisplayValue = displayValue;
             displayValue = "";
             subScreen.setText("0");
+            screen.setText("0");
         }
         if (displayValue.equals("0")) {
             displayValue = "";
@@ -313,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             btnDot.setOnClickListener(MainActivity.this);
             subDisplayValue = displayValue;
             subScreen.setText("0");
+            screen.setText("0");
         }
         if (displayValue.length() > 0) {
             if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(displayValue.length() - 1))) {
@@ -321,17 +325,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 subDisplayValue = displayValue + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
             }
             subScreen.setText(subDisplayValue);
-        }
-        if (displayValue.equals("0")) {
-            displayValue = "";
-            deleteNumberOneNumberTwoLastOperator();
-            subDisplayValue = displayValue;
-            subScreen.setText("0");
-        }
-        if (displayValue.equals("Infinity") || displayValue.equals("Nan")) {
-            deleteNumberOneNumberTwoLastOperator();
-            subDisplayValue = displayValue;
-            subScreen.setText("0");
         }
 
         displayValue = calculationUtilities.calculate(displayValue);
@@ -352,8 +345,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void roundBracketClose() {
-        if (roundBracketFlag && displayValue.charAt(displayValue.length() - 1) != '(') {
-            displayValue = displayValue + ")";
+        if (roundBracketFlag && !identifyOperatorNumberAndDot.isBracketOpen(displayValue.substring(displayValue.length() - 1))) {
+            if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(displayValue.length() - 1))) {
+                displayValue = displayValue + "0)";
+            } else {
+                displayValue = displayValue + ")";
+            }
             screen.setText(displayValue);
             roundBracketFlag = false;
         }
