@@ -244,33 +244,57 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void operatorButtonWork(int id) {
-        if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
-                && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
-                ) {
-            screenShow(id);
-            btnDot.setOnClickListener(MainActivity.this);
-        } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-            displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-            screenShow(id);
-            btnDot.setOnClickListener(MainActivity.this);
+        if (displayValue.charAt(displayValue.length() - 1) != '(') {
+            if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
+                    && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
+                    ) {
+                screenShow(id);
+                btnDot.setOnClickListener(MainActivity.this);
+            } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
+                displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                screenShow(id);
+                btnDot.setOnClickListener(MainActivity.this);
+            }
+            deleteNumberOneNumberTwoLastOperator();
+        } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
+            if (getString(id).equals("-")) {
+                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
+                        && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
+                        ) {
+                    screenShow(id);
+                    btnDot.setOnClickListener(MainActivity.this);
+                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
+                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                    screenShow(id);
+                    btnDot.setOnClickListener(MainActivity.this);
+                }
+                deleteNumberOneNumberTwoLastOperator();
+            }
         }
-        deleteNumberOneNumberTwoLastOperator();
+
     }
 
     private void backspaceButtonFunction() {
-        deleteNumberOneNumberTwoLastOperator();
-        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
-            displayValue = "";
-        } else {
-            displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-        }
-        if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
-            btnDot.setOnClickListener(MainActivity.this);
-        }
-        if (displayValue.length() != 0) {
-            screen.setText(displayValue);
-        } else {
-            screen.setText("0");
+        if (displayValue.length() > 0) {
+            deleteNumberOneNumberTwoLastOperator();
+            if (displayValue.charAt(displayValue.length() - 1) == ')') {
+                roundBracketFlag = true;
+            } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
+                roundBracketFlag = false;
+            }
+            if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+                displayValue = "";
+            } else {
+                displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+            }
+            if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
+                btnDot.setOnClickListener(MainActivity.this);
+            }
+            if (displayValue.length() != 0) {
+                screen.setText(displayValue);
+            } else {
+                screen.setText("0");
+            }
         }
     }
 
