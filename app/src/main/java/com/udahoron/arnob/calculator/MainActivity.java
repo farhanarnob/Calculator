@@ -233,33 +233,21 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void operatorButtonWork(int id) {
-        if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
-            if (displayValue.charAt(displayValue.length() - 1) == '.') {
-                displayValue = displayValue + "0";
-            }
-            if (roundBracketFlag && !buttonFunctionCheck.minusAsNumberSymbol(displayValue)) {
-                roundBracketFlag = false;
-                if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(displayValue.length() - 1))) {
-                    displayValue = displayValue + "0)";
-                } else {
-                    displayValue = displayValue + ")";
+        if (displayValue.length() > 0) {
+            if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
+                if (displayValue.charAt(displayValue.length() - 1) == '.') {
+                    displayValue = displayValue + "0";
+                }
+                if (roundBracketFlag && !buttonFunctionCheck.minusAsNumberSymbol(displayValue)) {
+                    roundBracketFlag = false;
+                    if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(displayValue.length() - 1))) {
+                        displayValue = displayValue + "0)";
+                    } else {
+                        displayValue = displayValue + ")";
+                    }
                 }
             }
-        }
-        if (displayValue.charAt(displayValue.length() - 1) != '(') {
-            if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
-                    && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
-                    ) {
-                screenShow(id);
-                btnDot.setOnClickListener(MainActivity.this);
-            } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                screenShow(id);
-                btnDot.setOnClickListener(MainActivity.this);
-            }
-            deleteNumberOneNumberTwoLastOperator();
-        } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
-            if (getString(id).equals("-")) {
+            if (displayValue.charAt(displayValue.length() - 1) != '(') {
                 if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
                         && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
                         ) {
@@ -271,6 +259,20 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     btnDot.setOnClickListener(MainActivity.this);
                 }
                 deleteNumberOneNumberTwoLastOperator();
+            } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
+                if (getString(id).equals("-")) {
+                    if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
+                            && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
+                            ) {
+                        screenShow(id);
+                        btnDot.setOnClickListener(MainActivity.this);
+                    } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
+                        displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                        screenShow(id);
+                        btnDot.setOnClickListener(MainActivity.this);
+                    }
+                    deleteNumberOneNumberTwoLastOperator();
+                }
             }
         }
 
