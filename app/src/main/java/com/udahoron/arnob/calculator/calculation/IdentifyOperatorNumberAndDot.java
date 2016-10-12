@@ -12,7 +12,7 @@ public class IdentifyOperatorNumberAndDot {
     }
 
     public boolean hasOperator(String value) {
-        for (int i = 0; i < value.length(); i++) {
+        for (int i = value.length() - 1; i >= 0; i--) {
             if (isOperator(value.substring(i, i + 1))) {
                 return true;
             }
@@ -25,12 +25,18 @@ public class IdentifyOperatorNumberAndDot {
     }
 
     public boolean hasDot(String dot) {
-        for (int i = 0; i < dot.length(); i++) {
-            if (dot.substring(i, i + 1).equals(".")) {
+        for (int i = dot.length() - 1; i >= 0; i--) {
+            if (isOperator(dot.substring(i, i + 1))) {
+                return false;
+            } else if (dot.substring(i, i + 1).equals(".")) {
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean isBracketOpen(String bracketOpen) {
+        return bracketOpen.equals("(");
     }
     public boolean isDot(String dot) {
         return dot.charAt(0) == '.';

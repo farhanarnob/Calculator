@@ -3,10 +3,10 @@ package com.udahoron.arnob.calculator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.udahoron.arnob.calculator.buttonChecker.ButtonFunctionCheck;
 import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     private Button btnNine, btnEight, btnSeven, btnSix, btnFive, btnFour, btnThree, btnTwo, btnOne, btnZero,
             btnPlus, btnMinus, btnMulti, btnDivide, btnEqual, btnBackspace,btnDot,btnRoundBracketOpen,
             btnRoundBracketClose, btnPlusOrMinus;
+    private boolean roundBracketFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 deleteNumberOneNumberTwoLastOperator();
                 break;
             case R.id.zero:
-                if (displayValue.length() != 0)
+                if (displayValue.length() > 0 && !displayValue.equals("0"))
                     screenShow(R.string.zero);
                 deleteNumberOneNumberTwoLastOperator();
                 break;
@@ -125,72 +126,19 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
 
             case R.id.backspace:
-                Toast.makeText(MainActivity.this, "backspace", Toast.LENGTH_SHORT).show();
-                deleteNumberOneNumberTwoLastOperator();
-                if (displayValue.equals("Infinity")) {
-                    displayValue = "";
-                } else {
-                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                }
-                if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
-                    btnDot.setOnClickListener(MainActivity.this);
-                }
-                if (displayValue.length() != 0) {
-                    screen.setText(displayValue);
-                } else {
-                    screen.setText("0");
-                }
+                backspaceButtonFunction();
                 break;
 
             case R.id.round_bracket_open:
-                Toast.makeText(MainActivity.this, "round_bracket_open", Toast.LENGTH_SHORT).show();
-
+                roundBracketOpen();
                 break;
 
             case R.id.round_bracket_close:
-                Toast.makeText(MainActivity.this, "round_bracket_close", Toast.LENGTH_SHORT).show();
+                roundBracketClose();
                 break;
 
             case R.id.equal:
-                Toast.makeText(MainActivity.this, "equal", Toast.LENGTH_SHORT).show();
-                if (displayValue.equals("Infinity") || displayValue.equals("")) {
-                    deleteNumberOneNumberTwoLastOperator();
-                    subDisplayValue = displayValue;
-                    subScreen.setText("0");
-                }
-                if (displayValue.equals("0")) {
-                    displayValue = "";
-                    deleteNumberOneNumberTwoLastOperator();
-                    subDisplayValue = displayValue;
-                    subScreen.setText("0");
-                }
-                if (displayValue.length() > 0) {
-                    if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(displayValue.length() - 1))) {
-                        subDisplayValue = displayValue.substring(0, displayValue.length() - 1) + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
-                    } else {
-                        subDisplayValue = displayValue + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
-                    }
-                    subScreen.setText(subDisplayValue);
-                }
-                if (displayValue.equals("0")) {
-                    displayValue = "";
-                    deleteNumberOneNumberTwoLastOperator();
-                    subDisplayValue = displayValue;
-                    subScreen.setText("0");
-                }
-                if (displayValue.equals("Infinity") || displayValue.equals("")) {
-                    deleteNumberOneNumberTwoLastOperator();
-                    subDisplayValue = displayValue;
-                    subScreen.setText("0");
-                }
-
-                displayValue = calculationUtilities.calculate(displayValue);
-                if (displayValue.length() > 0) {
-                    screen.setText(displayValue);
-                }
-                if (!buttonFunctionCheck.permissionDotEnable(displayValue)) {
-                    btnDot.setOnClickListener(null);
-                }
+                equalButtonFunction();
                 break;
 
             case R.id.plus_or_minus:
@@ -253,6 +201,17 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         if (displayValue.equals("Infinity")) {
             displayValue = "";
         }
+        if (identifyOperatorNumberAndDot.isOperator(getString(ins))) {
+            if (displayValue.charAt(displayValue.length() - 1) == '.') {
+                displayValue = displayValue + "0";
+            }
+            if (roundBracketFlag && !buttonFunctionCheck.minusAsNumberSymbol(displayValue)) {
+                roundBracketFlag = false;
+                displayValue = displayValue + ")";
+                Log.d("LOG", displayValue);
+
+            }
+        }
         displayValue = displayValue + getString(ins);
         if (identifyOperatorNumberAndDot.hasDot(displayValue)) {
             btnDot.setOnClickListener(null);
@@ -285,14 +244,93 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void operatorButtonWork(int id) {
-        if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue) && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))) {
+        if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
+                && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
+                ) {
             screenShow(id);
-            btnDot.setOnClickListener(this);
+            btnDot.setOnClickListener(MainActivity.this);
         } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
             displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
             screenShow(id);
-            btnDot.setOnClickListener(this);
+            btnDot.setOnClickListener(MainActivity.this);
         }
         deleteNumberOneNumberTwoLastOperator();
+    }
+
+    private void backspaceButtonFunction() {
+        deleteNumberOneNumberTwoLastOperator();
+        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+            displayValue = "";
+        } else {
+            displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+        }
+        if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
+            btnDot.setOnClickListener(MainActivity.this);
+        }
+        if (displayValue.length() != 0) {
+            screen.setText(displayValue);
+        } else {
+            screen.setText("0");
+        }
+    }
+
+    private void equalButtonFunction() {
+        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+            deleteNumberOneNumberTwoLastOperator();
+            btnDot.setOnClickListener(MainActivity.this);
+            subDisplayValue = displayValue;
+            displayValue = "";
+            subScreen.setText("0");
+        }
+        if (displayValue.equals("0")) {
+            displayValue = "";
+            deleteNumberOneNumberTwoLastOperator();
+            btnDot.setOnClickListener(MainActivity.this);
+            subDisplayValue = displayValue;
+            subScreen.setText("0");
+        }
+        if (displayValue.length() > 0) {
+            if (identifyOperatorNumberAndDot.hasOperator(displayValue.substring(displayValue.length() - 1))) {
+                subDisplayValue = displayValue.substring(0, displayValue.length() - 1) + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
+            } else {
+                subDisplayValue = displayValue + calculationUtilities.getLatestOperator() + calculationUtilities.getNumberTwo();
+            }
+            subScreen.setText(subDisplayValue);
+        }
+        if (displayValue.equals("0")) {
+            displayValue = "";
+            deleteNumberOneNumberTwoLastOperator();
+            subDisplayValue = displayValue;
+            subScreen.setText("0");
+        }
+        if (displayValue.equals("Infinity") || displayValue.equals("Nan")) {
+            deleteNumberOneNumberTwoLastOperator();
+            subDisplayValue = displayValue;
+            subScreen.setText("0");
+        }
+
+        displayValue = calculationUtilities.calculate(displayValue);
+        if (displayValue.length() > 0) {
+            screen.setText(displayValue);
+        }
+        if (!buttonFunctionCheck.permissionDotEnable(displayValue)) {
+            btnDot.setOnClickListener(null);
+        }
+    }
+
+    private void roundBracketOpen() {
+        if (!roundBracketFlag && identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
+            displayValue = displayValue + "(";
+            screen.setText(displayValue);
+            roundBracketFlag = true;
+        }
+    }
+
+    private void roundBracketClose() {
+        if (roundBracketFlag && displayValue.charAt(displayValue.length() - 1) != '(') {
+            displayValue = displayValue + ")";
+            screen.setText(displayValue);
+            roundBracketFlag = false;
+        }
     }
 }
