@@ -120,8 +120,9 @@ public class CalculationUtilities {
     }
 
     public String extraZeroRemoving(String valueBeforeRounding) {
-        int i = valueBeforeRounding.length();
         if (!valueBeforeRounding.equals("")) {
+            valueBeforeRounding = rounding(Double.parseDouble(valueBeforeRounding));
+            int i = valueBeforeRounding.length();
             if (identifyOperatorNumberAndDot.hasDot(valueBeforeRounding)) {
                 for (; ; ) {
                     if (valueBeforeRounding.charAt(valueBeforeRounding.length() - 1) == '0') {
@@ -132,14 +133,14 @@ public class CalculationUtilities {
                 }
 
             }
-            valueBeforeRounding = rounding(Double.parseDouble(valueBeforeRounding));
+
         }
         return valueBeforeRounding;
     }
 
     private String rounding(Double value) {
         if (value % 1 != 0) {
-            return String.format("%.2f", value);
+            return String.format("%.20f", value);
         } else {
             return String.valueOf(Math.round(value));
         }

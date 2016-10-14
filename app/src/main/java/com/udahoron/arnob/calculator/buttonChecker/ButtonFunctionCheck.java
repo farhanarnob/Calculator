@@ -9,7 +9,7 @@ import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 public class ButtonFunctionCheck {
     private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
 
-    public String regardingPlusMinusBtn(String displayValue) {
+    public String regardingPlusMinusBtn(String displayValue, boolean roundBracketFlag) {
         if (displayValue.length() != 0) {
             if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
                 if (!displayValue.substring(0, 1).equals("-")) {
@@ -19,6 +19,26 @@ public class ButtonFunctionCheck {
                     displayValue = displayValue.substring(1);
                     return displayValue;
 
+                }
+            } else if (displayValue.charAt(displayValue.length() - 1) == '-') {
+                displayValue = displayValue.substring(0, displayValue.length() - 1);
+            } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
+                displayValue = displayValue + "-";
+            } else if (roundBracketFlag) {
+                int i = 0;
+                for (int x = displayValue.length() - 1; x >= 0; x--) {
+                    if (displayValue.charAt(x) == '(') {
+                        i = x;
+                        break;
+                    }
+
+                }
+                if (i < displayValue.length() && i != 0) {
+                    if (identifyOperatorNumberAndDot.isNumber(displayValue.substring(i + 1, i + 2))) {
+                        displayValue = displayValue.substring(0, i + 1) + "-" + displayValue.substring(i + 1);
+                    } else if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(i + 1, i + 2))) {
+                        displayValue = displayValue.substring(0, i + 1) + displayValue.substring(i + 2);
+                    }
                 }
             }
         }

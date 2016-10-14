@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
 
             case R.id.plus_or_minus:
-                displayValue = buttonFunctionCheck.regardingPlusMinusBtn(displayValue);
+                displayValue = buttonFunctionCheck.regardingPlusMinusBtn(displayValue, roundBracketFlag);
                 if (displayValue.length() > 0) {
                     screen.setText(displayValue);
                 }
@@ -158,12 +158,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
             case R.id.M_PLUS:
                 equalButtonFunction();
-                mPlus();
+                mPlusMinus(R.string.plus);
                 break;
 
             case R.id.M_MINUS:
                 equalButtonFunction();
-                mMinus();
+                mPlusMinus(R.string.minus);
                 break;
         }
     }
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void numberButton(int id) {
-        if (equalButtonClick) {
+        if (equalButtonClick && !identifyOperatorNumberAndDot.hasOperator(displayValue)) {
             btnDot.setOnClickListener(MainActivity.this);
             displayValue = "";
             equalButtonClick = false;
@@ -390,6 +390,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             screen.setText(displayValue);
             roundBracketFlag = true;
         }
+        if (!roundBracketFlag && identifyOperatorNumberAndDot.isNumber(displayValue.substring(displayValue.length() - 1))) {
+            displayValue = displayValue + "*(";
+            screen.setText(displayValue);
+            roundBracketFlag = true;
+        }
     }
 
     private void roundBracketClose() {
@@ -424,46 +429,30 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
-    private void mPlus() {
+    private void mPlusMinus(int plusOrMinus) {
         String temp = sharedPref.getString(MEMORY, "");
-        if (displayValue.equals("NaN") || displayValue.equals("Infinity")) {
-            displayValue = "";
-            screen.setText("0");
-        }
-        if (temp.equals("")) {
-            temp = "0";
-        }
-        temp = (Double.parseDouble(temp) + Double.parseDouble(displayValue)) + "";
-        temp = calculationUtilities.extraZeroRemoving(temp);
-        editor.putString(MEMORY, temp + "");
-        editor.commit();
-        if (temp.length() > 0) {
+        if (!displayValue.equals("")) {
+            if (displayValue.equals("NaN") || displayValue.equals("Infinity")) {
+                displayValue = "";
+                screen.setText("0");
+            }
+            if (temp.equals("")) {
+                temp = "0";
+            }
+            if ((getString(plusOrMinus).equals("+"))) {
+                temp = (Double.parseDouble(temp) + Double.parseDouble(displayValue)) + "";
+            } else {
+                temp = (Double.parseDouble(temp) - Double.parseDouble(displayValue)) + "";
+            }
+            temp = calculationUtilities.extraZeroRemoving(temp);
+            editor.putString(MEMORY, temp + "");
+            editor.commit();
             Toast.makeText(getApplicationContext(), "memory : " + temp, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "memory is 0", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void mMinus() {
-        String temp = sharedPref.getString(MEMORY, "");
-        if (displayValue.equals("NaN") || displayValue.equals("Infinity")) {
-            displayValue = "";
-            screen.setText("0");
-        }
-        if (temp.equals("")) {
-            temp = "0";
-        }
-        temp = (Double.parseDouble(temp) - Double.parseDouble(displayValue)) + "";
-        temp = calculationUtilities.extraZeroRemoving(temp);
-        editor.putString(MEMORY, temp + "");
-        editor.commit();
-        if (temp.length() > 0) {
-            Toast.makeText(getApplicationContext(), "memory : " + temp, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "0", Toast.LENGTH_SHORT).show();
-        }
-        editor.commit();
-    }
 
     private void infinityNaNDetection() {
         if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
