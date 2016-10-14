@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                     btnDot.setOnClickListener(MainActivity.this);
                 }
                 roundBracketFlag = false;
-
+                equalButtonClick = false;
                 return true;
             }
         });
@@ -98,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 numberButton(R.string.zero);
                 break;
             case R.id.dot:
+                if (displayValue.equals("Nan") || displayValue.equals("Infinity")) {
+                    displayValue = "0";
+                }
                 if (displayValue.length() == 0) {
                     displayValue = "0";
                     screenShow(R.string.dot);
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
 
             case R.id.plus_or_minus:
-                displayValue = buttonFunctionCheck.regardingPlusMinusBtn(displayValue, roundBracketFlag);
+                displayValue = buttonFunctionCheck.regardingPlusOrMinusBtn(displayValue, roundBracketFlag);
                 if (displayValue.length() > 0) {
                     screen.setText(displayValue);
                 }
@@ -264,6 +267,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void operatorButtonWork(int id) {
+        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+            displayValue = "";
+            screen.setText("0");
+        }
         if (!displayValue.equals("")) {
             if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
                 if (displayValue.charAt(displayValue.length() - 1) == '.') {
@@ -453,12 +460,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
-
     private void infinityNaNDetection() {
         if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
             deleteNumberOneNumberTwoLastOperator();
             btnDot.setOnClickListener(MainActivity.this);
-            displayValue = "";
         }
     }
 

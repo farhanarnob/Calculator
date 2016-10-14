@@ -103,18 +103,22 @@ public class CalculationUtilities {
             case "+":
                 Double value = (Double.parseDouble(numberOne) + Double.parseDouble(numberTwo));
                 numberOne = extraZeroRemoving(value.toString());
+                minusInfinityNaNBlocking();
                 break;
             case "-":
                 value = (Double.parseDouble(numberOne) - Double.parseDouble(numberTwo));
                 numberOne = extraZeroRemoving(value.toString());
+                minusInfinityNaNBlocking();
                 break;
             case "*":
                 value = (Double.parseDouble(numberOne) * Double.parseDouble(numberTwo));
                 numberOne = extraZeroRemoving(value.toString());
+                minusInfinityNaNBlocking();
                 break;
             case "/":
                 value = (Double.parseDouble(numberOne) / Double.parseDouble(numberTwo));
                 numberOne = extraZeroRemoving(value.toString());
+                minusInfinityNaNBlocking();
                 break;
         }
     }
@@ -147,6 +151,14 @@ public class CalculationUtilities {
 
     }
 
+    private void minusInfinityNaNBlocking() {
+        if (numberOne.equals("-Infinity")) {
+            numberOne = "Infinity";
+        }
+        if (numberOne.equals("-NaN")) {
+            numberOne = "NaN";
+        }
+    }
     public String getNumberOne() {
         return numberOne;
     }
