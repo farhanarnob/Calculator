@@ -22,4 +22,8 @@
     <string name="round_bracket_open">(</string>
     <string name="round_bracket_close">)</string>
     <string name="history">H</string>
+    <string name="MC">MC</string>
+    <string name="MR">MR</string>
+    <string name="M_PLUS">M+</string>
+    <string name="M_MINUS">M-</string>
 </resources>

@@ -9,6 +9,7 @@
         android:id="@+id/history"
         style="@style/historyBtn"
         android:text="@string/history" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,19 +17,64 @@
         android:orientation="vertical"
         tools:context="com.udahoron.arnob.calculator.MainActivity">
 
-        <TextView
-            android:id="@+id/subDisplay"
-            style="@style/subDisplaySizeLand"
-            android:background="@color/displayBackground"
-            android:text="@string/zero" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.0"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-        <TextView
-            android:id="@+id/displayID"
-            style="@style/displaySize"
-            android:background="@color/displayBackground"
-            android:text="@string/zero"
-            />
+            <TextView
+                android:id="@+id/subDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="35dp"
+                android:layout_weight="0.45"
+                android:gravity="bottom|end"
+                android:maxLength="30"
+                android:scrollbars="vertical"
+                android:text="@string/zero"
+                android:textSize="25sp" />
 
+            <TextView
+                android:id="@+id/displayID"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.55"
+                android:gravity="bottom|end"
+                android:maxLength="30"
+                android:scrollbars="vertical|horizontal"
+                android:text="@string/zero"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/MC"
+                style="@style/btn"
+                android:text="@string/MC" />
+
+            <Button
+                android:id="@+id/MR"
+                style="@style/btn"
+                android:text="@string/MR" />
+
+            <Button
+                android:id="@+id/M_PLUS"
+                style="@style/btn"
+                android:text="@string/M_PLUS" />
+
+            <Button
+                android:id="@+id/M_MINUS"
+                style="@style/btn"
+                android:text="@string/M_MINUS" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

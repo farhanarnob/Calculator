@@ -59,6 +59,11 @@
                 android:id="@+id/backspace"
                 style="@style/btnLand"
                 android:text="@string/backspace" />
+
+            <Button
+                android:id="@+id/MC"
+                style="@style/btnLand"
+                android:text="@string/MC" />
         </LinearLayout>
 
         <LinearLayout
@@ -91,6 +96,11 @@
                 android:id="@+id/round_bracket_open"
                 style="@style/btnLand"
                 android:text="@string/round_bracket_open" />
+
+            <Button
+                android:id="@+id/MR"
+                style="@style/btnLand"
+                android:text="@string/MR" />
         </LinearLayout>
 
         <LinearLayout
@@ -123,6 +133,12 @@
                 android:id="@+id/round_bracket_close"
                 style="@style/btnLand"
                 android:text="@string/round_bracket_close" />
+
+            <Button
+                android:id="@+id/M_PLUS"
+                style="@style/btnLand"
+                android:text="@string/M_PLUS" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -155,6 +171,11 @@
                 android:id="@+id/equal"
                 style="@style/btnLand"
                 android:text="@string/equal" />
+
+            <Button
+                android:id="@+id/M_MINUS"
+                style="@style/btnLand"
+                android:text="@string/M_MINUS" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

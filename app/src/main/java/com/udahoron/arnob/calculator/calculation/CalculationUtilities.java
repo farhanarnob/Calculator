@@ -102,21 +102,39 @@ public class CalculationUtilities {
         switch (latestOperator) {
             case "+":
                 Double value = (Double.parseDouble(numberOne) + Double.parseDouble(numberTwo));
-                numberOne = rounding(value);
+                numberOne = extraZeroRemoving(value.toString());
                 break;
             case "-":
                 value = (Double.parseDouble(numberOne) - Double.parseDouble(numberTwo));
-                numberOne = rounding(value);
+                numberOne = extraZeroRemoving(value.toString());
                 break;
             case "*":
                 value = (Double.parseDouble(numberOne) * Double.parseDouble(numberTwo));
-                numberOne = rounding(value);
+                numberOne = extraZeroRemoving(value.toString());
                 break;
             case "/":
                 value = (Double.parseDouble(numberOne) / Double.parseDouble(numberTwo));
-                numberOne = rounding(value);
+                numberOne = extraZeroRemoving(value.toString());
                 break;
         }
+    }
+
+    public String extraZeroRemoving(String valueBeforeRounding) {
+        int i = valueBeforeRounding.length();
+        if (!valueBeforeRounding.equals("")) {
+            if (identifyOperatorNumberAndDot.hasDot(valueBeforeRounding)) {
+                for (; ; ) {
+                    if (valueBeforeRounding.charAt(valueBeforeRounding.length() - 1) == '0') {
+                        valueBeforeRounding = valueBeforeRounding.substring(0, --i);
+                        continue;
+                    }
+                    break;
+                }
+
+            }
+            valueBeforeRounding = rounding(Double.parseDouble(valueBeforeRounding));
+        }
+        return valueBeforeRounding;
     }
 
     private String rounding(Double value) {
