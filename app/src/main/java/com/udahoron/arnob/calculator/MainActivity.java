@@ -146,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
             case R.id.plus_or_minus:
                 displayValue = buttonFunctionCheck.regardingPlusOrMinusBtn(displayValue, roundBracketFlag);
-                if (displayValue.length() > 0) {
+                if (displayValue.equals("")) {
+                    screen.setText("0");
+                } else if (!displayValue.equals("")) {
                     screen.setText(displayValue);
                 }
                 deleteNumberOneNumberTwoLastOperator();
@@ -271,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             displayValue = "";
             screen.setText("0");
         }
-        if (!displayValue.equals("")) {
+        if (!displayValue.equals("") && !displayValue.equals("-")) {
             if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
                 if (displayValue.charAt(displayValue.length() - 1) == '.') {
                     displayValue = displayValue + "0";
@@ -317,7 +319,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void backspaceButtonFunction() {
-        if (displayValue.length() > 0) {
+        if (equalButtonClick) {
+            displayValue = "";
+            screen.setText("0");
+            equalButtonClick = false;
+        } else if (displayValue.length() > 0) {
             deleteNumberOneNumberTwoLastOperator();
             if (displayValue.charAt(displayValue.length() - 1) == ')') {
                 roundBracketFlag = true;
@@ -392,16 +398,19 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     }
 
     private void roundBracketOpen() {
-        if (!roundBracketFlag && identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
-            displayValue = displayValue + "(";
-            screen.setText(displayValue);
-            roundBracketFlag = true;
+        if (!displayValue.equals("")) {
+            if (!roundBracketFlag && identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
+                displayValue = displayValue + "(";
+                screen.setText(displayValue);
+                roundBracketFlag = true;
+            }
+            if (!roundBracketFlag && identifyOperatorNumberAndDot.isNumber(displayValue.substring(displayValue.length() - 1))) {
+                displayValue = displayValue + "*(";
+                screen.setText(displayValue);
+                roundBracketFlag = true;
+            }
         }
-        if (!roundBracketFlag && identifyOperatorNumberAndDot.isNumber(displayValue.substring(displayValue.length() - 1))) {
-            displayValue = displayValue + "*(";
-            screen.setText(displayValue);
-            roundBracketFlag = true;
-        }
+
     }
 
     private void roundBracketClose() {
@@ -438,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     private void mPlusMinus(int plusOrMinus) {
         String temp = sharedPref.getString(MEMORY, "");
-        if (!displayValue.equals("")) {
+        if (!displayValue.equals("") && !displayValue.equals("Infinity") && !displayValue.equals("NaN")) {
             if (displayValue.equals("NaN") || displayValue.equals("Infinity")) {
                 displayValue = "";
                 screen.setText("0");
@@ -455,8 +464,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             editor.putString(MEMORY, temp + "");
             editor.commit();
             Toast.makeText(getApplicationContext(), "memory : " + temp, Toast.LENGTH_SHORT).show();
+        }
+        if (!displayValue.equals("Infinity") || !displayValue.equals("NaN")) {
+            Toast.makeText(getApplicationContext(), "Can't save Infinity or NaN ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "memory is " + temp, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getApplicationContext(), "memory is 0", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "memory is " + temp, Toast.LENGTH_SHORT).show();
         }
     }
 

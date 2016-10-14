@@ -10,7 +10,7 @@ public class ButtonFunctionCheck {
     private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
 
     public String regardingPlusOrMinusBtn(String displayValue, boolean roundBracketFlag) {
-        if (displayValue.length() != 0) {
+        if (displayValue.length() != 0 && !displayValue.equals("Infinity") && !displayValue.equals("NaN")) {
             if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
                 if (!displayValue.substring(0, 1).equals("-")) {
                     displayValue = "-" + displayValue;
@@ -41,6 +41,10 @@ public class ButtonFunctionCheck {
                     }
                 }
             }
+        } else if (displayValue.equals("")) {
+            displayValue = "-";
+        } else if (displayValue.equals("-")) {
+            displayValue = "";
         }
         return displayValue;
     }
