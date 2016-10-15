@@ -95,6 +95,7 @@ public class CalculationUtilities {
         }
 
         calculation();
+        bracket.clear();
         return numberOne;
     }
 

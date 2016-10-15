@@ -104,10 +104,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 if (displayValue.length() == 0) {
                     displayValue = "0";
                     screenShow(R.string.dot);
+                    equalButtonClick = false;
                     btnDot.setOnClickListener(null);
                 } else {
                     displayValue = displayValue + ".";
                     screen.setText(displayValue);
+                    equalButtonClick = false;
                     btnDot.setOnClickListener(null);
                 }
 
@@ -162,13 +164,17 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
 
             case R.id.M_PLUS:
-                equalButtonFunction();
-                mPlusMinus(R.string.plus);
+                if (!equalButtonClick) {
+                    equalButtonFunction();
+                }
+                memoryPlusMinus(R.string.plus);
                 break;
 
             case R.id.M_MINUS:
-                equalButtonFunction();
-                mPlusMinus(R.string.minus);
+                if (!equalButtonClick) {
+                    equalButtonFunction();
+                }
+                memoryPlusMinus(R.string.M_MINUS);
                 break;
         }
     }
@@ -273,18 +279,14 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             displayValue = "";
             screen.setText("0");
         }
+        if (roundBracketFlag) {
+            return;
+        }
         if (!displayValue.equals("") && !displayValue.equals("-")) {
+            equalButtonClick = false;
             if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
                 if (displayValue.charAt(displayValue.length() - 1) == '.') {
                     displayValue = displayValue + "0";
-                }
-                if (roundBracketFlag && !buttonFunctionCheck.minusAsNumberSymbol(displayValue)) {
-                    roundBracketFlag = false;
-                    if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(displayValue.length() - 1))) {
-                        displayValue = displayValue + "0)";
-                    } else {
-                        displayValue = displayValue + ")";
-                    }
                 }
             }
             if (displayValue.charAt(displayValue.length() - 1) != '(') {
@@ -407,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             if (!roundBracketFlag && identifyOperatorNumberAndDot.isNumber(displayValue.substring(displayValue.length() - 1))) {
                 displayValue = displayValue + "*(";
                 screen.setText(displayValue);
+                btnDot.setOnClickListener(MainActivity.this);
                 roundBracketFlag = true;
             }
         }
@@ -415,11 +418,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     private void roundBracketClose() {
         if (roundBracketFlag && !identifyOperatorNumberAndDot.isBracketOpen(displayValue.substring(displayValue.length() - 1))) {
-            if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(displayValue.length() - 1))) {
-                displayValue = displayValue + "0)";
-            } else {
-                displayValue = displayValue + ")";
-            }
+            displayValue = displayValue + ")";
             screen.setText(displayValue);
             roundBracketFlag = false;
         }
@@ -445,7 +444,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
-    private void mPlusMinus(int plusOrMinus) {
+    private void memoryPlusMinus(int plusOrMinus) {
         String temp = sharedPref.getString(MEMORY, "");
         if (!displayValue.equals("") && !displayValue.equals("Infinity") && !displayValue.equals("NaN")) {
             if (displayValue.equals("NaN") || displayValue.equals("Infinity")) {
@@ -460,14 +459,14 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             } else {
                 temp = (Double.parseDouble(temp) - Double.parseDouble(displayValue)) + "";
             }
-            temp = calculationUtilities.extraZeroRemoving(temp);
+            if (!equalButtonClick) {
+                temp = calculationUtilities.extraZeroRemoving(temp);
+            }
             editor.putString(MEMORY, temp + "");
             editor.commit();
             Toast.makeText(getApplicationContext(), "memory : " + temp, Toast.LENGTH_SHORT).show();
-        }
-        if (!displayValue.equals("Infinity") || !displayValue.equals("NaN")) {
+        } else if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
             Toast.makeText(getApplicationContext(), "Can't save Infinity or NaN ", Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "memory is " + temp, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "memory is " + temp, Toast.LENGTH_SHORT).show();
         }
