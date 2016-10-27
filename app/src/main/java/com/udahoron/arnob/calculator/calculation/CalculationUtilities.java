@@ -19,7 +19,7 @@ public class CalculationUtilities {
         }
         if (displayValue.length() > 0 && displayValue.charAt(0) == '-' && !identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
             if (numberTwo.equals("")) {
-                return displayValue;
+                return returnOption(displayValue);
             }
         }
         for (; ; ) {
@@ -47,9 +47,9 @@ public class CalculationUtilities {
             if (!numberTwo.equals("")) {
                 calculation();
             }
-            return numberOne;
+            return returnOption(numberOne);
         }
-        return startToCalculate(displayValue);
+        return returnOption(startToCalculate(displayValue));
 
     }
 
@@ -102,24 +102,52 @@ public class CalculationUtilities {
     private void calculation() {
         switch (latestOperator) {
             case "+":
-                Double value = (Double.parseDouble(numberOne) + Double.parseDouble(numberTwo));
-                numberOne = extraZeroRemoving(value.toString());
-                minusInfinityNaNBlocking();
+                if (Double.parseDouble(numberOne) <= 9999999999999d && Double.parseDouble(numberTwo) <= 9999999999999d) {
+                    Double value = (Double.parseDouble(numberOne) + Double.parseDouble(numberTwo));
+                    numberOne = extraZeroRemoving(value.toString());
+                    minusInfinityNaNBlocking();
+                    returnOption(numberOne);
+                } else {
+                    numberOne = "ERROR | Max Limit < 10^14";
+                    numberTwo = "";
+                    latestOperator = "";
+                }
                 break;
             case "-":
-                value = (Double.parseDouble(numberOne) - Double.parseDouble(numberTwo));
-                numberOne = extraZeroRemoving(value.toString());
-                minusInfinityNaNBlocking();
+                if (Double.parseDouble(numberOne) <= 9999999999999d && Double.parseDouble(numberTwo) <= 9999999999999d) {
+                    Double value = (Double.parseDouble(numberOne) - Double.parseDouble(numberTwo));
+                    numberOne = extraZeroRemoving(value.toString());
+                    minusInfinityNaNBlocking();
+                    returnOption(numberOne);
+                } else {
+                    numberOne = "ERROR | Max Limit < 10^14";
+                    numberTwo = "";
+                    latestOperator = "";
+                }
                 break;
             case "*":
-                value = (Double.parseDouble(numberOne) * Double.parseDouble(numberTwo));
-                numberOne = extraZeroRemoving(value.toString());
-                minusInfinityNaNBlocking();
+                if (Double.parseDouble(numberOne) <= 9999999999999d && Double.parseDouble(numberTwo) <= 9999999999999d) {
+                    Double value = (Double.parseDouble(numberOne) * Double.parseDouble(numberTwo));
+                    numberOne = extraZeroRemoving(value.toString());
+                    minusInfinityNaNBlocking();
+                    returnOption(numberOne);
+                } else {
+                    numberOne = "ERROR | Max Limit < 10^14";
+                    numberTwo = "";
+                    latestOperator = "";
+                }
                 break;
             case "/":
-                value = (Double.parseDouble(numberOne) / Double.parseDouble(numberTwo));
-                numberOne = extraZeroRemoving(value.toString());
-                minusInfinityNaNBlocking();
+                if (Double.parseDouble(numberOne) <= 9999999999999d && Double.parseDouble(numberTwo) <= 9999999999999d) {
+                    Double value = (Double.parseDouble(numberOne) / Double.parseDouble(numberTwo));
+                    numberOne = extraZeroRemoving(value.toString());
+                    minusInfinityNaNBlocking();
+                    returnOption(numberOne);
+                } else {
+                    numberOne = "ERROR | Max Limit < 10^14";
+                    numberTwo = "";
+                    latestOperator = "";
+                }
                 break;
         }
     }
@@ -141,6 +169,17 @@ public class CalculationUtilities {
 
         }
         return valueBeforeRounding;
+    }
+
+    private String returnOption(String value) {
+        if (!value.equals("NaN") && !value.equals("Infinity") && !value.equals("ERROR | Max Limit < 10^14")) {
+            if (Double.parseDouble(value) < 99999999999999d) {
+                return value;
+            } else {
+                return "ERROR | Max Limit < 10^14";
+            }
+        }
+        return value;
     }
 
     private String rounding(Double value) {

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.udahoron.arnob.calculator.buttonChecker.ButtonFunctionCheck;
 import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
 import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
@@ -19,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     private static final String MEMORY = "memory";
     CalculationUtilities calculationUtilities = new CalculationUtilities();
     private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
-    private ButtonFunctionCheck buttonFunctionCheck = new ButtonFunctionCheck();
     private TextView screen;
     private TextView subScreen;
     private String displayValue = "";
@@ -27,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     private Button btnNine, btnEight, btnSeven, btnSix, btnFive, btnFour, btnThree, btnTwo, btnOne, btnZero,
             btnPlus, btnMinus, btnMulti, btnDivide, btnEqual, btnBackspace,btnDot,btnRoundBracketOpen,
             btnRoundBracketClose, btnPlusOrMinus, btnMC, btnMR, btnMPlus, btnMMinus;
-    private boolean roundBracketFlag = false, equalButtonClick = false;
+    private boolean roundBracketFlag = false, equalButtonClick = false, btnDotFlag = false;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     @Override
@@ -35,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         super.onCreate(savedInstanceState);
         sharedPref = MainActivity.this.getSharedPreferences("memoryInfo", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+        editor.commit();
 
         setContentView(R.layout.activity_main);
         screen = (TextView) findViewById(R.id.displayID);
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 subScreen.setText(R.string.zero);
                 screen.setText(R.string.zero);
                 deleteNumberOneNumberTwoLastOperator();
-                if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
+                if (permissionDotEnable()) {
                     btnDot.setOnClickListener(MainActivity.this);
                 }
                 roundBracketFlag = false;
@@ -98,21 +97,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 numberButton(R.string.zero);
                 break;
             case R.id.dot:
-                if (displayValue.equals("Nan") || displayValue.equals("Infinity")) {
-                    displayValue = "0";
-                }
-                if (displayValue.length() == 0) {
-                    displayValue = "0";
-                    screenShow(R.string.dot);
-                    equalButtonClick = false;
-                    btnDot.setOnClickListener(null);
-                } else {
-                    displayValue = displayValue + ".";
-                    screen.setText(displayValue);
-                    equalButtonClick = false;
-                    btnDot.setOnClickListener(null);
-                }
-
+                btnDotFunction();
                 break;
             case R.id.plus:
                 operatorButtonWork(R.string.plus);
@@ -147,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 break;
 
             case R.id.plus_or_minus:
-                displayValue = buttonFunctionCheck.regardingPlusOrMinusBtn(displayValue, roundBracketFlag);
+                regardingPlusOrMinusBtn();
                 if (displayValue.equals("")) {
                     screen.setText("0");
                 } else if (!displayValue.equals("")) {
@@ -234,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     //displaying current status
     private void screenShow(int ins) {
-        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+        if (displayValue.equals("Infinity") || displayValue.equals("NaN") || displayValue.equals("ERROR | Max Limit < 10^14")) {
             displayValue = "";
         }
 
@@ -252,6 +237,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("SAVE_DISPLAY_VALUE",displayValue);
         outState.putString("SAVE_SUB_DISPLAY_VALUE", subDisplayValue);
+        outState.putBoolean("SAVE_ROUND_BRACKET_FLAG", roundBracketFlag);
+        outState.putBoolean("EQUAL_BUTTON_CLICK", equalButtonClick);
+        outState.putBoolean("DOT_BUTTON_HAS_CLICK_LISTENER", btnDot.hasOnClickListeners());
         super.onSaveInstanceState(outState);
     }
 
@@ -259,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         displayValue = savedInstanceState.getString("SAVE_DISPLAY_VALUE");
         subDisplayValue = savedInstanceState.getString("SAVE_SUB_DISPLAY_VALUE");
+        roundBracketFlag = savedInstanceState.getBoolean("SAVE_ROUND_BRACKET_FLAG");
+        equalButtonClick = savedInstanceState.getBoolean("EQUAL_BUTTON_CLICK");
+        if (!savedInstanceState.getBoolean("DOT_BUTTON_HAS_CLICK_LISTENER")) {
+            btnDot.setOnClickListener(null);
+        }
         if (!displayValue.equals("")) {
             screen.setText(displayValue);
         }
@@ -274,52 +267,56 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         calculationUtilities.setLatestOperator("");
     }
 
+
+    // +,-,*,/ button work
     private void operatorButtonWork(int id) {
-        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
-            displayValue = "";
-            screen.setText("0");
-        }
-        if (roundBracketFlag) {
-            return;
-        }
-        if (!displayValue.equals("") && !displayValue.equals("-")) {
-            equalButtonClick = false;
-            if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
-                if (displayValue.charAt(displayValue.length() - 1) == '.') {
-                    displayValue = displayValue + "0";
-                }
+        if (displayValue.length() < 25) {
+            if (displayValue.equals("Infinity") || displayValue.equals("NaN") || displayValue.equals("ERROR | Max Limit < 10^14")) {
+                displayValue = "";
+                screen.setText("0");
             }
-            if (displayValue.charAt(displayValue.length() - 1) != '(') {
-                if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
-                        && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
-                        ) {
-                    screenShow(id);
-                    btnDot.setOnClickListener(MainActivity.this);
-                } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                    displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
-                    screenShow(id);
-                    btnDot.setOnClickListener(MainActivity.this);
+            if (roundBracketFlag) {
+                return;
+            }
+            if (!displayValue.equals("") && !displayValue.equals("-")) {
+                equalButtonClick = false;
+                if (identifyOperatorNumberAndDot.isOperator(getString(id))) {
+                    if (displayValue.charAt(displayValue.length() - 1) == '.') {
+                        displayValue = displayValue + "0";
+                    }
                 }
-                deleteNumberOneNumberTwoLastOperator();
-            } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
-                if (getString(id).equals("-")) {
+                if (displayValue.charAt(displayValue.length() - 1) != '(') {
                     if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
                             && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
                             ) {
                         screenShow(id);
                         btnDot.setOnClickListener(MainActivity.this);
                     } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
-                        displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                        backspaceButtonWork();
                         screenShow(id);
                         btnDot.setOnClickListener(MainActivity.this);
                     }
                     deleteNumberOneNumberTwoLastOperator();
+                } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
+                    if (getString(id).equals("-")) {
+                        if (displayValue.length() != 0 && !identifyOperatorNumberAndDot.atLastHasOperator(displayValue)
+                                && !identifyOperatorNumberAndDot.isSameOperator(displayValue, getString(id))
+                                ) {
+                            screenShow(id);
+                            btnDot.setOnClickListener(MainActivity.this);
+                        } else if (displayValue.length() != 0 && identifyOperatorNumberAndDot.atLastHasOperator(displayValue)) {
+                            backspaceButtonWork();
+                            screenShow(id);
+                            btnDot.setOnClickListener(MainActivity.this);
+                        }
+                        deleteNumberOneNumberTwoLastOperator();
+                    }
                 }
             }
         }
-
     }
 
+    // ⌫ button work
     private void backspaceButtonFunction() {
         if (equalButtonClick) {
             displayValue = "";
@@ -332,12 +329,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             } else if (displayValue.charAt(displayValue.length() - 1) == '(') {
                 roundBracketFlag = false;
             }
-            if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+            if (displayValue.equals("Infinity") || displayValue.equals("NaN") || displayValue.equals("ERROR | Max Limit < 10^14")) {
                 displayValue = "";
             } else {
-                displayValue = buttonFunctionCheck.backspaceButtonWork(displayValue);
+                displayValue = backspaceButtonWork();
             }
-            if (buttonFunctionCheck.permissionDotEnable(displayValue)) {
+            if (permissionDotEnable()) {
                 btnDot.setOnClickListener(MainActivity.this);
             }
             if (displayValue.length() != 0) {
@@ -348,24 +345,60 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         }
     }
 
+    // 0,1,2,3,4,5,6,7,8,9 number button function
     private void numberButton(int id) {
-        if (equalButtonClick && !identifyOperatorNumberAndDot.hasOperator(displayValue)) {
-            btnDot.setOnClickListener(MainActivity.this);
-            displayValue = "";
-            equalButtonClick = false;
-        }
-        if (getString(id).equals("0")) {
-            if (!displayValue.equals("") && !displayValue.equals("0")) {
-                screenShow(R.string.zero);
+        if (displayValue.length() < 25) {
+            if (equalButtonClick && !identifyOperatorNumberAndDot.hasOperator(displayValue)) {
+                btnDot.setOnClickListener(MainActivity.this);
+                displayValue = "";
+                equalButtonClick = false;
             }
+            if (getString(id).equals("0")) {
+                if (!displayValue.equals("") && !displayValue.equals("0")) {
+                    screenShow(R.string.zero);
+                }
 
-        } else {
-            screenShow(id);
+            } else {
+                if (!displayValue.equals("") && displayValue.substring(displayValue.length() - 1).equals(")")) {
+                    displayValue = displayValue + "*";
+                    btnDot.setOnClickListener(MainActivity.this);
+                }
+                screenShow(id);
+            }
+            deleteNumberOneNumberTwoLastOperator();
         }
-        deleteNumberOneNumberTwoLastOperator();
     }
-    private void equalButtonFunction() {
 
+    //dot button checking
+    private void btnDotFunction() {
+        if (displayValue.length() < 25) {
+            if (equalButtonClick) {
+                displayValue = "0";
+                equalButtonClick = false;
+            } else if (displayValue.equals("Nan") || displayValue.equals("Infinity") || displayValue.equals("ERROR | Max Limit < 10^14")) {
+                displayValue = "0";
+                equalButtonClick = false;
+            }
+            if (displayValue.length() == 0) {
+                displayValue = "0";
+                screenShow(R.string.dot);
+                equalButtonClick = false;
+                btnDot.setOnClickListener(null);
+            } else {
+                if (!displayValue.equals("") && displayValue.substring(displayValue.length() - 1).equals(")")) {
+                    displayValue = displayValue + "*";
+                    btnDot.setOnClickListener(MainActivity.this);
+                }
+                displayValue = displayValue + ".";
+                screen.setText(displayValue);
+                equalButtonClick = false;
+                btnDot.setOnClickListener(null);
+            }
+        }
+    }
+
+    // = button function
+    private void equalButtonFunction() {
         roundBracketFlag = false;
         equalButtonClick = true;
         infinityNaNDetection();
@@ -393,21 +426,25 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             screen.setText(displayValue);
         }
         infinityNaNDetection();
-        if (!buttonFunctionCheck.permissionDotEnable(displayValue)) {
-            btnDot.setOnClickListener(null);
-        }
 
     }
 
+    // "(" button function
     private void roundBracketOpen() {
-        if (!displayValue.equals("")) {
-            if (!roundBracketFlag && identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
+        if (!roundBracketFlag && !displayValue.equals("") && displayValue.length() < 25) {
+            if (identifyOperatorNumberAndDot.isOperator(displayValue.substring(displayValue.length() - 1))) {
                 displayValue = displayValue + "(";
                 screen.setText(displayValue);
                 roundBracketFlag = true;
             }
-            if (!roundBracketFlag && identifyOperatorNumberAndDot.isNumber(displayValue.substring(displayValue.length() - 1))) {
+            if ((identifyOperatorNumberAndDot.isNumber(displayValue.substring(displayValue.length() - 1))
+                    || displayValue.substring(displayValue.length() - 1).equals(")"))) {
                 displayValue = displayValue + "*(";
+                screen.setText(displayValue);
+                btnDot.setOnClickListener(MainActivity.this);
+                roundBracketFlag = true;
+            } else if (displayValue.substring(displayValue.length() - 1).equals(".")) {
+                displayValue = displayValue + "0*(";
                 screen.setText(displayValue);
                 btnDot.setOnClickListener(MainActivity.this);
                 roundBracketFlag = true;
@@ -416,20 +453,88 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     }
 
+    // ")" button function
     private void roundBracketClose() {
-        if (roundBracketFlag && !identifyOperatorNumberAndDot.isBracketOpen(displayValue.substring(displayValue.length() - 1))) {
-            displayValue = displayValue + ")";
-            screen.setText(displayValue);
-            roundBracketFlag = false;
+        if (displayValue.length() < 25) {
+            if (roundBracketFlag && !identifyOperatorNumberAndDot.isBracketOpen(displayValue.substring(displayValue.length() - 1))
+                    && !identifyOperatorNumberAndDot.isDot(displayValue.substring(displayValue.length() - 1))) {
+
+                displayValue = displayValue + ")";
+                screen.setText(displayValue);
+                roundBracketFlag = false;
+            } else if (roundBracketFlag && displayValue.substring(displayValue.length() - 1).equals(".")) {
+                displayValue = displayValue + "0)";
+                screen.setText(displayValue);
+                btnDot.setOnClickListener(MainActivity.this);
+                roundBracketFlag = false;
+            }
+        }
+
+    }
+
+    // plusMinus button
+    private void regardingPlusOrMinusBtn() {
+        if (displayValue.length() < 25) {
+            if (displayValue.length() != 0 && !displayValue.equals("Infinity") && !displayValue.equals("NaN")) {
+                if (!identifyOperatorNumberAndDot.hasOperator(displayValue.substring(1))) {
+                    if (!displayValue.substring(0, 1).equals("-")) {
+                        displayValue = "-" + displayValue;
+                    } else if (displayValue.substring(0, 1).equals("-")) {
+                        displayValue = displayValue.substring(1);
+
+                    }
+                }
+//                else if (displayValue.charAt(displayValue.length() - 1) == '-') {
+//                    displayValue = displayValue.substring(0, displayValue.length() - 1);
+//                }
+                else if (displayValue.charAt(displayValue.length() - 1) == '(') {
+                    displayValue = displayValue + "-";
+                } else if (roundBracketFlag) {
+                    int i = 0;
+                    for (int x = displayValue.length() - 1; x >= 0; x--) {
+                        if (displayValue.charAt(x) == '(') {
+                            i = x;
+                            break;
+                        }
+
+                    }
+                    if (i < displayValue.length() && i != 0) {
+                        if (identifyOperatorNumberAndDot.isNumber(displayValue.substring(i + 1, i + 2))) {
+                            displayValue = displayValue.substring(0, i + 1) + "-" + displayValue.substring(i + 1);
+                        } else if (identifyOperatorNumberAndDot.isMinus(displayValue.substring(i + 1, i + 2))) {
+                            displayValue = displayValue.substring(0, i + 1) + displayValue.substring(i + 2);
+                        }
+                    }
+                } else if (identifyOperatorNumberAndDot.hasOperator(displayValue)) {
+                    int i;
+                    for (i = displayValue.length() - 1; i >= 0; i--) {
+                        if (identifyOperatorNumberAndDot.isOperator(displayValue.substring(i, i + 1))) {
+                            break;
+                        }
+                    }
+                    displayValue = displayValue.substring(0, i + 1) + "(-" + displayValue.substring(i + 1);
+                    screen.setText(displayValue);
+                    btnDot.setOnClickListener(MainActivity.this);
+                    roundBracketFlag = true;
+                }
+
+            } else if (displayValue.equals("")) {
+                displayValue = "-";
+            } else if (displayValue.equals("-")) {
+                displayValue = "";
+            }
+
         }
     }
 
+    // MC button function
     private void mcClear() {
         editor.clear();
         editor.commit();
         Toast.makeText(getApplicationContext(), "memory is 0", Toast.LENGTH_SHORT).show();
     }
 
+    // MR button function
     private void mrDisplay() {
         displayValue = "";
         String temp = sharedPref.getString(MEMORY, "");
@@ -440,14 +545,16 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         } else {
             displayValue = temp;
             screen.setText(displayValue);
-            Toast.makeText(getApplicationContext(), displayValue + "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "memory is " + displayValue, Toast.LENGTH_SHORT).show();
         }
     }
 
+
+    // M+ and M- button function
     private void memoryPlusMinus(int plusOrMinus) {
         String temp = sharedPref.getString(MEMORY, "");
-        if (!displayValue.equals("") && !displayValue.equals("Infinity") && !displayValue.equals("NaN")) {
-            if (displayValue.equals("NaN") || displayValue.equals("Infinity")) {
+        if (!displayValue.equals("") && !displayValue.equals("Infinity") && !displayValue.equals("NaN") && !displayValue.equals("ERROR | Max Limit < 10^14")) {
+            if (displayValue.equals("NaN") || displayValue.equals("Infinity") || displayValue.equals("ERROR | Max Limit < 10^14")) {
                 displayValue = "";
                 screen.setText("0");
             }
@@ -465,18 +572,46 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             editor.putString(MEMORY, temp + "");
             editor.commit();
             Toast.makeText(getApplicationContext(), "memory : " + temp, Toast.LENGTH_SHORT).show();
-        } else if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
-            Toast.makeText(getApplicationContext(), "Can't save Infinity or NaN ", Toast.LENGTH_SHORT).show();
+        } else if (displayValue.equals("Infinity") || displayValue.equals("NaN") || displayValue.equals("ERROR | Max Limit < 10^14")) {
+            Toast.makeText(getApplicationContext(), "Can't save Infinity or NaN or Error Value", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "memory is " + temp, Toast.LENGTH_SHORT).show();
         }
     }
 
+
+    // NaN & Infinity button work
     private void infinityNaNDetection() {
-        if (displayValue.equals("Infinity") || displayValue.equals("NaN")) {
+        if (displayValue.equals("Infinity") || displayValue.equals("NaN") || displayValue.equals("ERROR | Max Limit < 10^14")) {
             deleteNumberOneNumberTwoLastOperator();
             btnDot.setOnClickListener(MainActivity.this);
         }
     }
+
+
+    //removing last value or operator
+    private String backspaceButtonWork() {
+
+        if (displayValue.length() > 0) {
+            displayValue = displayValue.substring(0, displayValue.length() - 1);
+            return displayValue;
+
+        }
+        return displayValue;
+
+    }
+
+    public boolean permissionDotEnable() {
+        for (int i = displayValue.length(); i >= 1; i--) {
+            if (identifyOperatorNumberAndDot.isOperator(displayValue.substring(i - 1, i))) {
+                return true;
+            }
+            if (displayValue.charAt(i - 1) == '.') {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }

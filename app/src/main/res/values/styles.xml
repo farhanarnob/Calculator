@@ -10,25 +10,25 @@
     </style>
 
 
-    <style name="subDisplaySizeLand">
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">30sp</item>
-        <item name="android:gravity">bottom|right</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:maxLength">30</item>
-        <item name="android:layout_marginLeft">35dp</item>
-    </style>
+    <!--<style name="subDisplaySizeLand">-->
+    <!--<item name="android:layout_height">50dp</item>-->
+    <!--<item name="android:layout_width">match_parent</item>-->
+    <!--<item name="android:textSize">30sp</item>-->
+    <!--<item name="android:gravity">bottom|right</item>-->
+    <!--<item name="android:scrollbars">vertical|horizontal</item>-->
+    <!--<item name="android:maxLength">30</item>-->
+    <!--<item name="android:layout_marginLeft">35dp</item>-->
+    <!--</style>-->
 
 
-    <style name="displaySizeLand">
-        <item name="android:layout_height">62dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">35sp</item>
-        <item name="android:gravity">bottom|right</item>
-        <item name="android:scrollbars">vertical|horizontal</item>
-        <item name="android:maxLength">30</item>
-    </style>
+    <!--<style name="displaySizeLand">-->
+    <!--<item name="android:layout_height">62dp</item>-->
+    <!--<item name="android:layout_width">match_parent</item>-->
+    <!--<item name="android:textSize">35sp</item>-->
+    <!--<item name="android:gravity">bottom|right</item>-->
+    <!--<item name="android:scrollbars">vertical|horizontal</item>-->
+    <!--<item name="android:maxLength">30</item>-->
+    <!--</style>-->
     <style name="btn">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
