@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +18,7 @@ import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
 
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener {
+    private Toolbar toolbar;
     private static final String MEMORY = "memory";
     CalculationUtilities calculationUtilities = new CalculationUtilities();
     private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
@@ -31,11 +35,16 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         sharedPref = MainActivity.this.getSharedPreferences("memoryInfo", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         editor.commit();
-
-        setContentView(R.layout.activity_main);
         screen = (TextView) findViewById(R.id.displayID);
         subScreen = (TextView) findViewById(R.id.subDisplay);
         screen.setMovementMethod(new ScrollingMovementMethod());
@@ -58,6 +67,21 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         });
 
         identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
+    }
+
+    //adding history icon as action menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.history){
+            Toast.makeText(this,"history added",Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     // implementing lister of the button
