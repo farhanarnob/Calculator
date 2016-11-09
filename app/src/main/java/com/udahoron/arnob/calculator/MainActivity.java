@@ -14,11 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
+import com.udahoron.arnob.calculator.calculation.DB.database;
 import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
 
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener {
     private Toolbar toolbar;
+    private database database;
     private static final String MEMORY = "memory";
     CalculationUtilities calculationUtilities = new CalculationUtilities();
     private IdentifyOperatorNumberAndDot identifyOperatorNumberAndDot;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        database = new database(this);
 
         sharedPref = MainActivity.this.getSharedPreferences("memoryInfo", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -443,7 +447,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             }
             subScreen.setText(subDisplayValue);
         }
-
+        if(database.insertData(displayValue)){
+            Toast.makeText(this,"data inserted",Toast.LENGTH_SHORT).show();
+        }
         displayValue = calculationUtilities.calculate(displayValue);
 
         if (displayValue.length() > 0) {
