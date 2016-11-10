@@ -13,15 +13,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class database extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "history.bd";
     public static final String TABLE_NAME = "history_table";
-    public static final String COL_1 = "history_id";
-    public static final String COL_2 = "history";
+    public static final String COL_1 = "history";
     public database(Context context) {
         super(context, DATABASE_NAME, null , 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE "+TABLE_NAME+" ( "+COL_2+" TEXT )");
+        db.execSQL("CREATE TABLE "+TABLE_NAME+" ( "+COL_1+" TEXT )");
     }
 
     @Override
@@ -33,7 +32,7 @@ public class database extends SQLiteOpenHelper {
     public boolean insertData(String history){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2,history);
+        contentValues.put(COL_1,history);
         Long flag = db.insert(TABLE_NAME,null,contentValues);
         if(flag == -1){
             return false;

@@ -1,7 +1,9 @@
 package com.udahoron.arnob.calculator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.udahoron.arnob.calculator.calculation.CalculationUtilities;
 import com.udahoron.arnob.calculator.calculation.DB.database;
+import com.udahoron.arnob.calculator.calculation.HistoryActivity;
 import com.udahoron.arnob.calculator.calculation.IdentifyOperatorNumberAndDot;
 
 
@@ -83,7 +86,14 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.history){
-            Toast.makeText(this,"history added",Toast.LENGTH_SHORT).show();
+            Cursor res = database.getAllData();
+            if(res.getCount()==0){
+                Toast.makeText(this,"no history",Toast.LENGTH_SHORT).show();
+            }else {
+                Intent intentNew = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intentNew);
+            }
+
         }
         return true;
     }
