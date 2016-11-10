@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,6 +55,25 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         screen.setMovementMethod(new ScrollingMovementMethod());
         screen.setText(R.string.zero);
         buttonInit();
+
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null){
+            String history_value= extras.getString("HISTORY_VALUE","");
+            if(!history_value.equals("")){
+                Toast.makeText(MainActivity.this,"history value",Toast.LENGTH_SHORT).show();
+                displayValue = history_value;
+                subDisplayValue = "";
+                roundBracketFlag = false;
+                equalButtonClick = false;
+                btnDotFlag = false;
+                Toast.makeText(MainActivity.this,"history value",Toast.LENGTH_SHORT).show();
+                screen.setText(displayValue);
+            }
+
+        }
+
+
+
         btnBackspace.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -76,12 +93,15 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         identifyOperatorNumberAndDot = new IdentifyOperatorNumberAndDot();
     }
 
-    //adding history icon as action menu
+
+
+    // adding menu item on toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -93,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 Intent intentNew = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intentNew);
             }
-
         }
         return true;
     }
