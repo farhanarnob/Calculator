@@ -53,8 +53,9 @@ public class HistoryActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = listView.getItemAtPosition(position).toString();
+                String[] parts = selectedItem.split("=");
                 Intent intentWithHistory = new Intent( HistoryActivity.this,MainActivity.class);
-                intentWithHistory.putExtra("HISTORY_VALUE",selectedItem);
+                intentWithHistory.putExtra("HISTORY_VALUE",parts[0]);
                 startActivityForResult(intentWithHistory,101);
             }
         });

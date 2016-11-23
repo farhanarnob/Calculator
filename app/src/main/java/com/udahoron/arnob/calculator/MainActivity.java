@@ -476,11 +476,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
             }
             subScreen.setText(subDisplayValue);
         }
-        if(database.insertData(displayValue)){
+        String val = displayValue+calculationUtilities.getLatestOperator()+calculationUtilities.getNumberTwo();
+
+        displayValue = calculationUtilities.calculate(displayValue);
+        if(database.insertData(val+"="+displayValue)){
             Toast.makeText(this,"data inserted",Toast.LENGTH_SHORT).show();
         }
-        displayValue = calculationUtilities.calculate(displayValue);
-
         if (displayValue.length() > 0) {
             screen.setText(displayValue);
         }
